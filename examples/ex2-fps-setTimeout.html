@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 2 (FPS Count)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+
+			window.onload = function () 
+			{
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+				
+				var fpsArray = new Array();
+				var fpsCount = 0;
+				var stopAt = 10;
+				var fps = 0;
+				var startTime = 0;				
+								
+				var date = new Date();
+				startTime = Math.round(date.getTime() / 1000);
+				
+				c.font = '20px _sans';
+
+				draw(startTime);
+				
+				function draw (timeStamp)
+				{
+					var date = new Date();
+					ts = Math.round(date.getTime() / 1000);
+
+					if (timeStamp != ts) {
+						fps = fpsCount;
+						fpsCount = 0;
+						fpsArray.push(fps);
+					} else {
+						fpsCount++;
+					}
+
+					c.fillStyle = '#000000';
+					c.fillRect (0, 0, canvas.width, canvas.height);
+
+					c.fillStyle = '#FFFFFF';
+					c.fillText ("TS: " + timeStamp, 10, 20);
+					c.fillText ("FPS: " + fps, 10, 40);
+
+					if (timeStamp <= (startTime + stopAt)) {
+						setTimeout(function() {
+							draw(ts);
+						}, 1);
+					} else {
+						showResults(c, canvas);
+					}
+				}
+
+				function showResults()
+				{
+					var mean = 0;
+					var sum = 0;
+
+					c.fillStyle = '#FFFFFF';
+					c.fillRect (0, 0, canvas.width, canvas.height);
+
+					// sort the samples
+					for (var i = 0; i < fpsArray.length; i++) {
+						for (var j = fpsArray.length - 1; j > i; j--) {
+					     		if (fpsArray[j - 1] > fpsArray[j]) {
+								fpsArray[j - 1] = fpsArray[j];
+							}
+						}
+					}
+
+					// Discard the first value, which is usually very low
+					fpsArray = fpsArray.slice (1, fpsArray.length);
+
+					for (var i = 0; i < fpsArray.length; i++) {
+						sum = sum + fpsArray[i];
+					}
+
+					mean = sum / fpsArray.length;
+
+					c.fillStyle = '#000000';
+					c.fillText ("MIN: " + fpsArray[0], 10, 20);
+					c.fillText ("MAX: " + fpsArray[fpsArray.length - 1], 10, 40);
+					c.fillText ("MEAN: " + (Math.round(mean * 10) / 10), 10, 60);
+				}
+			}
+		</script>
+		
+    </head>
+    <body>
+		<canvas id="myCanvas" width="160" height="70" style="border: 1px solid black;">
+			Your browser doesn't include support for the canvas tag.
+		</canvas>
+    </body>
+</html>

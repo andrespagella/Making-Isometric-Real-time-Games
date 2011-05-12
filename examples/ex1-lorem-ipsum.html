@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 1 (Lorem Ipsum)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+
+			window.onload = function () 
+			{
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+				
+				var loremIpsum = new Array();
+				loremIpsum.push ("Lorem ipsum dolor sit amet, ");
+				loremIpsum.push ("consectetur adipisicing elit, ");
+				loremIpsum.push ("sed do eiusmod tempor incididunt ");
+				loremIpsum.push ("ut labore et dolore magna aliqua.");
+				
+				c.font = '24px _sans';
+				
+				draw (c, canvas, loremIpsum, 0);
+			}
+			
+			function draw (c, canvas, phrase, pos)
+			{
+				pos = (pos == phrase.length) ? 0 : pos;
+				
+				var textSize = c.measureText (phrase [pos]);
+				var xCoord = (canvas.width / 2) - (textSize.width / 2);
+				
+				c.fillStyle = '#FFFFFF';
+				c.fillRect (0, 0, canvas.width, canvas.height);
+				
+				c.fillStyle = '#000000';
+				c.fillText (phrase [pos], xCoord, 56);
+				
+				pos++;
+				
+				setTimeout(function () {
+					draw (c, canvas, phrase, pos);
+				}, 1000);
+			}
+			
+		</script>
+		
+    </head>
+    <body>
+		<canvas id="myCanvas" width="500" height="100" style="border: 1px solid black">
+			Your browser doesn't include support for the canvas tag.
+		</canvas>
+    </body>
+</html>

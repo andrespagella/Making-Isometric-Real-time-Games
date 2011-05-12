@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 3 (Sprite Animations)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+			var fpsCount = 0;
+			var fps = 0;
+			var startTime = 0;
+			
+			var Timer = function()
+			{
+				this.date = new Date();
+				
+				this.update = function()
+				{
+					var d = new Date();
+					this.date = d;
+				}
+				
+				this.getMilliseconds = function()
+				{
+					return this.date.getTime();
+				}
+				
+				this.getSeconds = function()
+				{
+					return Math.round(this.date.getTime() / 1000);
+				}
+			}
+
+			var Sprite = function (spritesheet, width, height, offsetX, offsetY, frames, duration)
+			{
+				this.spritesheet = new Image();
+				this.spritesheet.src = spritesheet;
+				
+				this.width = width;
+				this.height = height;
+				this.offsetX = offsetX;
+				this.offsetY = offsetY;
+				this.frames = frames;
+				this.duration = duration;
+				
+				this.posX = 0;
+				this.posY = 0;
+
+				this.currentFrame = 0;
+				
+				var d = new Date();
+				this.ftime = d.getTime() + (this.duration / this.frames);
+				
+				this.getPosition = function()
+				{
+					return {
+						x: this.posX,
+						y: this.posY
+					}
+				}
+				this.setPosition = function(x, y)
+				{
+					this.posX = x;
+					this.posY = y;
+				}
+				
+				this.animate = function(c, t)
+				{
+					if (t.getMilliseconds() > this.ftime) {
+						this.nextFrame ();
+					}
+					
+					this.draw(c);
+				}
+				
+				this.nextFrame = function()
+				{	
+					var d = new Date();
+					this.ftime = d.getTime() + (this.duration / this.frames);
+					this.offsetX = this.width * this.currentFrame;
+					
+					if (this.currentFrame == (this.frames - 1)) {
+						this.currentFrame = 0;
+					} else {
+						this.currentFrame++;
+					}
+				}
+				
+				this.draw = function(c)
+				{
+					c.drawImage(this.spritesheet, this.offsetX, this.offsetY, this.width, this.height, this.posX, this.posY, this.width, this.height);
+				}
+			};
+			
+			window.onload = function () 
+			{
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+				
+				// Initialize our sprites
+				var spritesheet = 'sprite1.png';
+				
+				var gray = new Sprite(spritesheet, 60, 60, 0, 0, 5, 5000);
+				var yellow = new Sprite(spritesheet, 60, 60, 0, 60, 5, 2500);
+				var red = new Sprite(spritesheet, 60, 60, 0, 120, 5, 1666);
+				var blue = new Sprite(spritesheet, 60, 60, 0, 180, 5, 1250);
+				var green = new Sprite(spritesheet, 60, 60, 0, 240, 5, 1000);
+								
+				var timer = new Timer();
+				
+				c.font = '14px _sans';
+
+				var startTime = timer.getSeconds();
+				draw(startTime);
+				
+				function draw (timeStamp)
+				{				
+					timer.update();
+
+					if (timeStamp != timer.getSeconds()) {
+						fps = fpsCount;
+						fpsCount = 0;
+					} else {
+						fpsCount++;
+					}
+
+					c.fillStyle = '#FFFFFF';
+					c.fillRect (0, 0, canvas.width, canvas.height);
+
+					c.fillStyle = '#000000';
+					
+					gray.setPosition(40, 60);
+					gray.animate(c, timer);
+
+					yellow.setPosition(80, 100);					
+					yellow.animate(c, timer);
+					
+					red.setPosition(120, 140);
+					red.animate(c, timer);
+					
+					blue.setPosition(160, 180);
+					blue.animate(c, timer);
+					
+					green.setPosition(200, 220);
+					green.animate(c, timer);
+
+					c.fillText ("Elapsed Time: " + (timeStamp - startTime) + " Seconds", 10, 20);
+					c.fillText ("FPS: " + fps, 10, 40);
+
+					setTimeout(function() {
+						draw(timer.getSeconds());
+					}, 1);
+				}
+			}
+			
+			
+		</script>
+		
+    </head>
+    <body>
+		<canvas id="myCanvas" width="300" height="300" style="border: 1px solid black;">
+			Your browser doesn't include support for the canvas tag.
+		</canvas>
+    </body>
+</html>

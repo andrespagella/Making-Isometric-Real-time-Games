@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 4 (Detecting Colors)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+			window.onload = function () 
+			{
+				var preview = document.getElementById('preview');
+				var r = document.getElementById('r');
+				var g = document.getElementById('g');
+				var b = document.getElementById('b');
+				var a = document.getElementById('a');
+				var mx = document.getElementById('mx');
+				var my = document.getElementById('my');
+				
+				var canvas = document.getElementById('myCanvas');
+				canvas.addEventListener('mousemove', move, false);
+				
+				var c = canvas.getContext('2d');
+				
+				var smiley = new Image()
+				smiley.src = "smiley.png";
+				
+				draw();
+				
+				function draw ()
+				{				
+
+					c.drawImage(smiley, 0, 0, canvas.width, canvas.height);
+				}
+				
+				function move (e)
+				{
+					mx.innerHTML = e.x;
+					my.innerHTML = e.y;
+					
+					var img = c.getImageData(e.x, e.y, 1, 1);
+					var idata = img.data;
+					
+					var red = idata[0];
+					var green = idata[1];
+					var blue = idata[2];
+					var alpha = idata[3];
+					
+					r.innerHTML = red;
+					g.innerHTML = green;
+					b.innerHTML = blue;
+					
+					a.innerHTML = (alpha > 0) ? alpha : 'Transparent';
+					
+					preview.style.backgroundColor = 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alpha + ')';
+				}
+			}
+		</script>
+		
+		<style type="text/css" media="screen">
+			body { margin: 0px; padding: 0px; }
+		
+			canvas {
+				border: 1px solid black;
+				float: left;
+			}
+			
+			ul { 
+				list-style: none;
+				margin: 10px 10px 10px 10px;
+				padding: 0px;
+				float: left;
+			}
+			
+			ul li { font-weight: bold; }
+			ul li span { font-weight: normal; }
+			ul li #preview { width: 50px; height: 50px; border: 1px solid black; }
+		</style>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="300" height="300">
+			Your browser doesn't include support for the canvas tag.
+		</canvas>
+		<ul>
+			<li><div id="preview"></div></li>
+			<li>Red: <span id="r">NULL</span></li>
+			<li>Green: <span id="g">NULL</span></li>
+			<li>Blue: <span id="b">NULL</span></li>
+			<li>Alpha: <span id="a">NULL</span></li>
+			<li>Mouse X: <span id="mx">NULL</span></li>
+			<li>Mouse Y: <span id="my">NULL</span></li>
+		</ul>
+    </body>
+</html>

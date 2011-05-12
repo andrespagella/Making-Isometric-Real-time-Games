@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 4 (Detecting Colors)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+			window.onload = function () {
+				var MIN_ALPHA_THRESHOLD = 10;
+				
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+				
+				document.addEventListener('click', detectElement, false);
+
+				function detectElement (e) {
+					var invisibleObjects = new Array();
+					var solidPixel = false;
+					var obj;
+
+					do {
+						obj = document.elementFromPoint(e.clientX, e.clientY);
+
+						if (obj == null || obj.tagName == 'BODY' || obj.tagName == 'HTML') {
+							break;
+						}
+
+						if (isTransparent(obj, e.clientX, e.clientY)) {
+							invisibleObjects.push(obj);
+							setObjectEventVisibility(obj, false);
+						} else {
+							solidPixel = true;
+						}
+					} while(!solidPixel);
+					
+					for (var i = 0; i < invisibleObjects.length; i++) {
+						setObjectEventVisibility(invisibleObjects[i], true);
+					}
+
+					invisibleObjects = null;
+
+					alert(obj.tagName);
+				}
+
+				function setObjectEventVisibility(obj, visible) {
+					if (visible) {
+						obj.style.pointerEvents = 'visiblePainted';
+					} else {
+						obj.style.pointerEvents = 'none';
+					}
+				}
+				
+				function isTransparent(obj, x, y) {
+					var robj = obj;
+					var rx = robj.x;
+					var ry = robj.y;
+					var offset = { x: 0, y: 0 };
+					var padding = { x: 0, y: 0 };
+					var margin = { x: 0, y: 0 };
+					
+					// Calculate the X (left) and Y (top) coordinates relative to the parent until we get to the "top"
+					if (robj.offsetParent) {
+						rx = 0;
+						ry = 0;
+						
+						while(robj.offsetParent) {
+							rx += robj.offsetLeft;
+							ry += robj.offsetTop;
+							robj = robj.offsetParent;
+						}
+					}
+
+					if (obj.currentStyle) {
+						padding.x = obj.currentStyle['paddingLeft'];
+						padding.y = obj.currentStyle['paddingTop'];
+
+						margin.x = obj.currentStyle['marginLeft'];
+						margin.y = obj.currentStyle['marginTop'];
+					} else if (window.getComputedStyle) {
+						var cs = document.defaultView.getComputedStyle(obj, null);
+
+						padding.x = cs.getPropertyValue('padding-left').substr(0, cs.getPropertyValue('padding-left').length - 2);
+						padding.y = cs.getPropertyValue('padding-top').substr(0, cs.getPropertyValue('padding-top').length - 2);
+
+						margin.x = cs.getPropertyValue('margin-left').substr(0, cs.getPropertyValue('margin-left').length - 2);
+						margin.y = cs.getPropertyValue('margin-top').substr(0, cs.getPropertyValue('margin-top').length - 2);
+					}
+
+					offset.x = padding.x + margin.x;
+					offset.y = padding.y + margin.y;
+
+					switch(obj.tagName) {
+						case 'IMG':
+							return isPixelTransparent(obj.src, (x - rx), (y - ry), obj.width, obj.height);
+							break;
+						case 'DIV':
+						case 'TD':
+						case 'P':
+						case 'SPAN':
+						case 'A':
+							/** 
+							 * obj.style.property only works when you define CSS atributes in-line,
+							 * therefore we need an alternative method of figuring out if the div
+							 * has been styled using a stylesheet.
+							 */	
+							if (obj.currentStyle) {
+								if (obj.currentStyle['backgroundColor'].length == 0) {
+									if (obj.currentStyle['backgroundImage'].length == 0) {
+										// No solid background color and no background image
+										return true;
+									} else {
+										var w = obj.currentStyle['width'];
+										var h = obj.currentStyle['height'];
+
+										var src = obj.currentStyle['backgroundImage'].substr(4);
+										return isPixelTransparent(src.substr(0, src.length - 1), (x - rx), (y - ry), w, h, offset.x, offset.y);
+									}
+								}
+							} else if (window.getComputedStyle) {
+								var cs = document.defaultView.getComputedStyle(obj, null);
+								if (cs.getPropertyValue('background-color') == null ||
+									cs.getPropertyValue('background-color') == 'rgba(0, 0, 0, 0)') {
+
+									if (cs.getPropertyValue('background-image') == null || cs.getPropertyValue('background-image') == 'none') {
+										// No solid background color and no background image
+										return true;
+									} else {
+										var w = cs.getPropertyValue('width').substr(0, cs.getPropertyValue('width').length - 2);
+										var h = cs.getPropertyValue('height').substr(0, cs.getPropertyValue('width').length - 2);
+										
+										/**
+										 * cs.getPropertyValue('background-image') returns the image URL
+										 * in the format url(file), we just need the file, so we need to
+										 * get rid of the 'url(' and the ')'
+										 */
+										var src = cs.getPropertyValue('background-image').substr(4);
+										src = src.substr(0, src.length - 1);
+
+										var bOffset = getBackgroundPosition(src, cs.getPropertyValue('background-position'));
+
+										offset.x = bOffset.x;
+										offset.y = bOffset.y;
+
+										return isPixelTransparent(src, (x - rx), (y - ry), w, h, offset.x, offset.y);
+									}
+								}
+							}
+							break;
+					}
+
+					return false;
+				}
+
+				function getBackgroundPosition(src, property) {
+					property = property.split(' ');
+
+					/**
+					 * Modifying the code to find out if its inheriting any properties 
+					 * from a parent would be too inefficient. We're going to be 
+					 * assuming that if the element has 'auto', it means 0
+					 */
+					var left = (property[0] != 'auto') ? property[0].substr(0, property[0].length - 2) : 0;
+					var top = (property[1] != 'auto') ? property[1].substr(0, property[1].length - 2) : 0;
+
+					return { 
+						x: left, 
+						y: top 
+					};
+				}
+				
+				function isPixelTransparent (src, x, y, oWidth, oHeight, offsetX, offsetY) {				
+					var img = new Image()
+					img.src = src;
+
+					// If parameters are not being passed on to this function, use "default" values
+					oWidth = (!oWidth) ? img.width : oWidth;
+					oHeight = (!oHeight) ? img.height : oHeight;
+					offsetX = (!offsetX) ? 0 : offsetX;
+					offsetY = (!offsetY) ? 0 : offsetY;
+
+					// 'Reset' the canvas before painting over it again
+					c.clearRect(0, 0, 1, 1);
+
+					c.drawImage(img, offsetX - x, offsetY - y, img.width, img.height);
+					
+					var idata = c.getImageData(0, 0, 1, 1);
+					var data = idata.data;
+					var alpha = data[3];
+
+					return (alpha < MIN_ALPHA_THRESHOLD);
+				}
+			}
+		</script>
+		
+		<style type="text/css" media="screen">
+			body { 
+				margin: 0px; 
+				padding: 0px; 
+				background-color: black;
+			}
+		
+			canvas {
+				display: none;
+			}
+			
+			div { 
+				float: left;
+				width: 300px; 
+				height: 300px; 
+				position: relative; 
+				margin: 0px auto 0px auto; 
+			}
+			div * { 
+				position: absolute; 
+				top: 0px; 
+				left: 0px; 
+				width: 300px; 
+				height: 300px; 
+				margin: 0px;
+			} 
+
+			div#cheese {
+				background: transparent url(cheese.png) no-repeat 0px 0px;
+				width: 300px;
+			}
+		</style>
+    </head>
+    <body>
+		<div>
+			<div id="cheese"></div>
+			<img src="smiley.png" />
+		</div>
+
+		<canvas id="myCanvas" width="1" height="1"></canvas>
+    </body>
+</html>

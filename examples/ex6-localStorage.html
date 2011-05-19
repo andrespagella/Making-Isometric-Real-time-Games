@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Canvas Example 6 (LocalStorage)</title>
+		
+		<script type="text/javascript" charset="utf-8">	
+			window.onload = function () {
+				var binMatrix = null;
+				var matrixSize = 25;
+
+				// This is the key name under which we will be storing, loading or removing the data
+				var KEY_NAME = "matrix";
+
+				var matrix = document.getElementById('matrix');
+				var load = document.getElementById('load');
+				var save = document.getElementById('save');
+				var clear = document.getElementById('clear');
+
+				binMatrix = initializeMatrix(matrixSize);
+				printMatrix(binMatrix, matrix);
+
+				// Handle click events on the buttons
+				load.addEventListener('click', handleLoad, false);
+				save.addEventListener('click', handleSave, false);
+				clear.addEventListener('click', handleClear, false);
+				
+				function handleLoad() {
+					var m = localStorage.getItem(KEY_NAME);
+
+					try {
+						// If we haven't set the key yet, or we removed its contents the "m" variable
+						// will be null.
+						if (m == null) {
+							alert("You haven't stored a matrix yet.");
+						} else {
+							// Otherwise, we need to "parse" the contents back to an array.
+							binMatrix = JSON.parse(m);
+
+							// Clear the original matrix
+							matrix.innerHTML = null;
+
+							// And reprint it
+							printMatrix(binMatrix, matrix);
+						}
+					} catch(e) {
+						alert("The following error ocurred while trying to load the matrix: " + e);
+					}
+				}
+
+				function handleSave() {
+					try {
+						// Read the values of the checkbox inside the "matrix" div
+						// and replace them accordingly in the array
+						for (var i = 0; i < matrixSize; i++) {
+							for (var j = 0; j < matrixSize; j++) {
+								var pos = (i + j) + (i * matrixSize);
+								
+								if (matrix.childNodes[pos].tagName == "INPUT") {
+									binMatrix[i][j] = (matrix.childNodes[pos].checked) ? 1 : 0;
+								}
+							}
+						}
+						// Finally, stringify the matrix for storage and save it
+						localStorage.setItem(KEY_NAME, JSON.stringify(binMatrix));
+					} catch(e) {
+						alert("The following error ocurred while trying to save the matrix: " + e);
+					}
+				}
+
+				function handleClear() {
+					if (confirm("Are you sure that you want to empty the matrix?")) {
+						try {
+							localStorage.removeItem(KEY_NAME);
+
+							// Clear the original matrix
+							matrix.innerHTML = null;
+							binMatrix = null;
+
+							// Regenerate the matrix
+							binMatrix = initializeMatrix(matrixSize);
+
+							// And reprint it
+							printMatrix(binMatrix, matrix);
+						} catch(e) {
+							alert("The following error ocurred while trying to remove the matrix: " + e);
+						}
+					}
+				}				
+			}
+
+			/**
+			 * Generic matrix initialization routine
+			 */
+			function initializeMatrix(size) {
+				var m = new Array(size);
+
+				for (var i = 0; i < size; i++) {
+					m[i] = new Array(size);
+					for (var j = 0; j < size; j++) {
+						m[i][j] = 0;
+					}
+				}
+
+				return m;
+			}
+
+			/**
+			 * The following function gets the matrix and converts it to a long string of
+			 * checkboxes, to then insert it inside the "matrix" <div>
+			 * It is considered a good practice, unless you really need to do otherwise, to use strings 
+			 * to generate HTML elements in order to avoid having to create a new object for every new 
+			 * element that you want to add. 
+			 * Concatenate all the strings together and insert them to the object "all at once" 
+			 * in order to prevent unnecessary and performance-heavy browser reflows.
+			 */
+			function printMatrix(m, elem) {
+				var str = "";
+
+				for (var i = 0, x = m.length; i < x; i++) {
+					for (var j = 0, r = m[i].length; j < r; j++) {
+						str += '<input type="checkbox" class="' + i + ' - ' + j + '" ';
+						str += (m[i][j] == 1) ? 'checked' : '';
+						str += ' />';
+						str += ((j + 1) == r) ? '<div class="clb"></div>' : '';
+					}
+				}
+
+				elem.innerHTML = str;
+			}
+		</script>
+		
+		<style type="text/css" media="screen">
+			body { 
+				margin: 20px; 
+				padding: 0px;
+			}
+
+			#matrix input { 
+				float: left;
+				padding: 0px;
+				margin: 0px;
+			}
+			div.clb { clear: both; }
+		</style>
+    </head>
+    <body>
+    	<input type="button" id="load" value="Load Matrix" />
+    	<input type="button" id="save" value="Save Matrix" />
+    	<input type="button" id="clear" value="Clear Matrix" />
+
+    	<br /><br />
+
+    	<div id="matrix"></div>
+    </body>
+</html>

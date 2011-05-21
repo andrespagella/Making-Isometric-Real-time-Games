@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example7 (HTML5 Audio)</title>
+		<script type="text/javascript">
+			window.onload = function() {
+
+				// Define an array with the audio files to try
+				var sources = [
+					["../sounds/song.mp3", "audio/mp3"],
+					["../sounds/song.ogg", "audio/ogg"]
+				];
+
+				// Create the HTML5 Audio tag
+				var audio = document.createElement('audio');
+
+				// Cycle the "sources" array
+				for (var i = 0; i < sources.length; i++) {
+					if (audio.canPlayType(sources[i][1]) == "maybe") {
+
+						// Create a source parameter
+						var src = document.createElement('source');
+						// Add both src and type attributes
+						src.setAttribute("src", sources[i][0]);
+						src.setAttribute("type", sources[i][1]);
+
+						// Append the source to the Audio tag
+						audio.appendChild(src);
+
+					}
+				}
+
+				// Check if no sources has been added
+				if (audio.networkState == audio.NETWORK_NO_SOURCE) {
+					// Attempt to play the sound
+					audio.play();
+				} else {
+					alert("This browser doesn't include support for neither MP3 nor OGG sound files.");
+				}
+
+			}
+		</script>
+    </head>
+    <body>
+    	HTML5 Audio tag example.
+    </body>
+</html>

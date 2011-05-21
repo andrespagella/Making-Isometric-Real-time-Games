@@ -33,10 +33,10 @@
 				
 				function move (e)
 				{
-					mx.innerHTML = e.x;
-					my.innerHTML = e.y;
+					mx.innerHTML = e.clientX;
+					my.innerHTML = e.clientY;
 					
-					var img = c.getImageData(e.x, e.y, 1, 1);
+					var img = c.getImageData(e.clientX, e.clientY, 1, 1);
 					var idata = img.data;
 					
 					var red = idata[0];

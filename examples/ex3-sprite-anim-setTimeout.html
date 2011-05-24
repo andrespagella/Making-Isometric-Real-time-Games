@@ -30,10 +30,10 @@
 				}
 			}
 
-			var Sprite = function (spritesheet, width, height, offsetX, offsetY, frames, duration)
+			var Sprite = function (src, width, height, offsetX, offsetY, frames, duration)
 			{
 				this.spritesheet = new Image();
-				this.spritesheet.src = spritesheet;
+				this.spritesheet.src = src;
 				
 				this.width = width;
 				this.height = height;

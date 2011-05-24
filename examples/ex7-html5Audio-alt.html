@@ -17,7 +17,8 @@
 
 				// Cycle the "sources" array
 				for (var i = 0; i < sources.length; i++) {
-					if (audio.canPlayType(sources[i][1]) == "maybe") {
+					if (audio.canPlayType(sources[i][1]) == "maybe" || 
+						audio.canPlayType(sources[i][1]) == "probably") {
 
 						// Create a source parameter
 						var src = document.createElement('source');

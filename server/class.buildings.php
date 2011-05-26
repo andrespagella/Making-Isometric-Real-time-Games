@@ -104,7 +104,7 @@ class BuildingUtil
 		if (count($res) == 0) {
 			return null;
 		} else {
-			$arr = [];
+			$arr = array();
 			for ($i = 0, $x = count($res); $i < $x; $i++) {
 				
 				$building = new Building($res[$i]['ID'], $res[$i]['NAME']);

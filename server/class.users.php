@@ -121,7 +121,7 @@ class UserUtil
 		if (count($res) == 0) {
 			return null;
 		} else {
-			$arr = [];
+			$arr = array();
 			for ($i = 0, $x = count($res); $i < $x; $i++) {
 				
 				$user = new User($res[$i]['ID'], $res[$i]['NAME'], $res[$i]['EMAIL']);

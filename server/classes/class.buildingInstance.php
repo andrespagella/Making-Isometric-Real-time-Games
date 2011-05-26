@@ -45,7 +45,7 @@ class BuildingInstance
 	final public function setBuildingId($buildingId) { $this->buildingId = (int)$buildingId; }
 
 	final public function getXPos() { return (int)$this->xpos; }
-	final public function setXPos($xpos) { $this->xpos = $xpos; }
+	final public function setXPos($xpos) { $this->xpos = (int)$xpos; }
 
 	final public function getYPos() { return (int)$this->ypos; }
 	final public function setYPos($ypos) { $this->ypos = (int)$ypos; }

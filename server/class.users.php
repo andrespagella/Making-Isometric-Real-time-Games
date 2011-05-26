@@ -4,7 +4,7 @@
  *
  * Developed by Mario Andres Pagella (andres.pagella@gmail.com) 
  *
- * These example is from the book JavaScript: Making Isometric Social Real-Time Games with HTML5, CSS3 and Javascript
+ * This example is from the book JavaScript: Making Isometric Social Real-Time Games with HTML5, CSS3 and Javascript
  * See the "O'Reilly Policy on Re-Use of Code Examples from Books"
  * (http://www.oreilly.com/pub/a/oreilly/ask_tim/2001/codepolicy.html) for
  * details on how you may and may not use these examples. In most cases, it
@@ -56,6 +56,8 @@ class UserUtil
 		}
 
 		$username = $this->DBRef->filterString($user->getName());
+		$username = $this->DBRef->sanitizeString($username);
+
 		$password = $this->DBRef->filterString($user->getPassword());
 		$email = $this->DBRef->filterString($user->getEmail());
 
@@ -92,12 +94,12 @@ class UserUtil
 		if (!$res || count($res) == 0) {
 			return null;
 		} else {
-			$user = new User((int)$res['ID'], $res['NAME'], $res['EMAIL']);
+			$user = new User($res['ID'], $res['NAME'], $res['EMAIL']);
 			$user->setPassword($res['PASSWORD']);
-			$user->setBalance((int)$res['BALANCE']);
+			$user->setBalance($res['BALANCE']);
 			$user->setConfig($res['CONFIG']);
-			$user->setCreationTime((int)$res['CREATIONTIME']);
-			$user->setLastUpdate((int)$res['LASTUPDATE']);
+			$user->setCreationTime($res['CREATIONTIME']);
+			$user->setLastUpdate($res['LASTUPDATE']);
 
 			return $user;
 		}

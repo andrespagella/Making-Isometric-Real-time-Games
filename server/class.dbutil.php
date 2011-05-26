@@ -4,7 +4,7 @@
  *
  * Developed by Mario Andres Pagella (andres.pagella@gmail.com) 
  *
- * These example is from the book JavaScript: Making Isometric Social Real-Time Games with HTML5, CSS3 and Javascript
+ * This example is from the book JavaScript: Making Isometric Social Real-Time Games with HTML5, CSS3 and Javascript
  * See the "O'Reilly Policy on Re-Use of Code Examples from Books"
  * (http://www.oreilly.com/pub/a/oreilly/ask_tim/2001/codepolicy.html) for
  * details on how you may and may not use these examples. In most cases, it
@@ -175,6 +175,13 @@ class DBUtil
 	final public function filterString($str = '') 
 	{
 		$str = $this->mySQLi->real_escape_string($str);
+		
+		return (string)$str;
+	}
+
+	final public function sanitizeString($str = '') 
+	{
+		$str = strip_tags($str);
 		
 		return (string)$str;
 	}

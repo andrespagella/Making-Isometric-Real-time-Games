@@ -5,6 +5,7 @@
 	require_once ('classes/class.user.php');
 	require_once ('classes/class.buildings.php');
 	require_once ('classes/class.building.php');
+	require_once ('config.php');
 
 	$DB = new DBUtil(DB_HOST,		// Hostname of the DB Server
 				 	 DB_USER,		// DB user

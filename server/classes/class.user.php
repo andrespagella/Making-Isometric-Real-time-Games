@@ -26,16 +26,11 @@ class User
 	final public function __construct($id, $name, $email)
 	{						
 		if ($id != null) {
-			$this->id = (int) $id;
+			$this->setId($id);
 		}
 
-		$this->name = $name;
-
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			throw new Exception('Invalid email address');
-		} else {
-			$this->email = $email;
-		}
+		$this->setName($name);
+		$this->setEmail($email);
 	}
 
 	final public function getId() { return (int)$this->id; }

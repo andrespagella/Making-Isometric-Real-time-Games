@@ -1,6 +1,6 @@
 <?php
 /**
- * Building class
+ * BuildingInstance class
  *
  * Developed by Mario Andres Pagella (andres.pagella@gmail.com) 
  *
@@ -19,38 +19,35 @@
  * of any kind.
  */ 
 
-class Building
+class BuildingInstance
 {
-	private $id, $name, $cost = 0, $xsize = 1, $ysize = 1, $profit = 0, $lapse = 0;
+	private $id, $userId, $buildingId, $xpos, $ypos;
 
-	final public function __construct($id, $name)
+	final public function __construct($id, $userId, $buildingId, $xpos, $ypos)
 	{						
 		if ($id != null) {
 			$this->setId($id);
 		}
 
-		$this->setName($name);
+		$this->setUserId($userId);
+		$this->setBuildingId($buildingId);
+		$this->setXPos($xpos);
+		$this->setYPos($ypos);
 	}
 
 	final public function getId() { return (int)$this->id; }
 	final public function setId($id) { $this->id = (int)$id; }
 
-	final public function getName() { return $this->name; }
-	final public function setName($name) { $this->name = $name; }
+	final public function getUserId() { return (int)$this->userId; }
+	final public function setUserId($userId) { $this->userId = (int)$userId; }
 
-	final public function getCost() { return (int)$this->cost; }
-	final public function setCost($cost) { $this->cost = (int)$cost; }
+	final public function getBuildingId() { return (int)$this->buildingId; }
+	final public function setBuildingId($buildingId) { $this->buildingId = (int)$buildingId; }
 
-	final public function getXSize() { return (int)$this->xsize; }
-	final public function setXSize($xsize) { $this->xsize = $xsize; }
+	final public function getXPos() { return (int)$this->xpos; }
+	final public function setXPos($xpos) { $this->xpos = $xpos; }
 
-	final public function getYSize() { return (int)$this->ysize; }
-	final public function setYSize($ysize) { $this->ysize = (int)$ysize; }
-
-	final public function getProfit() { return (int)$this->profit; }
-	final public function setProfit($profit) { $this->profit = (int)$profit; }
-
-	final public function getLapse() { return (int)$this->lapse; }
-	final public function setLapse($lapse) { $this->lapse = (int)$lapse; }
+	final public function getYPos() { return (int)$this->ypos; }
+	final public function setYPos($ypos) { $this->ypos = (int)$ypos; }
 }
 ?>

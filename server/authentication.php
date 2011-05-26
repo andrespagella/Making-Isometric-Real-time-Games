@@ -4,6 +4,7 @@
 	require_once ('classes/class.dbutil.php');
 	require_once ('classes/class.users.php');
 	require_once ('classes/class.user.php');
+	require_once ('config.php');
 
 	session_start();
 

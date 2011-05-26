@@ -19,6 +19,8 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   ID int(10) NOT NULL AUTO_INCREMENT,
   NAME varchar(30) NOT NULL,
+  PASSWORD varchar(255) NOT NULL,
+  EMAIL varchar(255) NOT NULL,
   BALANCE int(10) unsigned NOT NULL,
   CONFIG blob NOT NULL,
   CREATIONTIME int(10) unsigned NOT NULL,

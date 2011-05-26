@@ -148,5 +148,40 @@ class UserUtil
 
 		return $this->DBRef->ExecQuery($query);
 	}
+
+	final public function authenticate($email, $password) {
+		$email = (isset($email)) ? $email : "";
+		$password = (isset($password)) ? $password : "";
+
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			return null;
+		}
+
+		if (strlen($password) == 0) {
+			return null;
+		}
+
+		$email = $this->DBRef->filterString($email);
+		$password = sha1($password);
+
+		$query = "SELECT * FROM users WHERE ";
+		$query .= "EMAIL = '$email' AND ";
+		$query .= "PASSWORD = '$password' ";
+
+		$res = $this->DBRef->GetSingleResult($query);
+
+		if (count($res) == 0) {
+			return null;
+		} else {
+			$user = new User($res['ID'], $res['NAME'], $res['EMAIL']);
+			$user->setPassword($res['PASSWORD']);
+			$user->setBalance($res['BALANCE']);
+			$user->setConfig($res['CONFIG']);
+			$user->setCreationTime($res['CREATIONTIME']);
+			$user->setLastUpdate($res['LASTUPDATE']);
+
+			return $user;
+		}
+	}
 }
 ?>

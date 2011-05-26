@@ -6,10 +6,10 @@
 	require_once ('classes/class.buildings.php');
 	require_once ('classes/class.building.php');
 
-	$DB = new DBUtil('localhost',   // Hostname of the DB Server
-					 'mygameuser',  // DB user
-					 'game123',		// DB password
-					 'mygame');		// DB name
+	$DB = new DBUtil(DB_HOST,		// Hostname of the DB Server
+				 	 DB_USER,		// DB user
+				 	 DB_PASSWORD,	// DB password
+				 	 DB_NAME);		// DB name
 
 	if ($DB) {
 		$UserUtil = new UserUtil($DB);

@@ -4,16 +4,17 @@
 	require_once ('classes/class.dbutil.php');
 	require_once ('classes/class.users.php');
 	require_once ('classes/class.user.php');
+	require_once ('config.php');
 
 	session_start();
 
 	$error = false;
 
 	if (count($_POST) != 0 && !isset($_SESSION['userSession'])) {
-		$DB = new DBUtil('localhost',   // Hostname of the DB Server
-				 		 'mygameuser',  // DB user
-				 		 'game123',		// DB password
-				 		 'mygame');		// DB name
+		$DB = new DBUtil(DB_HOST,		// Hostname of the DB Server
+				 		 DB_USER,		// DB user
+				 		 DB_PASSWORD,	// DB password
+				 		 DB_NAME);		// DB name
 
 		if ($DB) {
 			$UserUtil = new UserUtil($DB);

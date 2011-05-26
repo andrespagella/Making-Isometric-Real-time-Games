@@ -19,7 +19,9 @@
  * of any kind.
  */ 
 
-require_once ('class.user.php');
+if (!class_exists('User')) {
+	require_once ('class.user.php');
+}
 
 define('DEBUG_MODE', true); // Set to false to hide MySQL error messages
 

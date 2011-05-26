@@ -19,7 +19,9 @@
  * of any kind.
  */ 
 
-require_once ('class.building.php');
+if (!class_exists('Building')) {
+	require_once ('class.building.php');
+}
 
 define('DEBUG_MODE', true); // Set to false to hide MySQL error messages
 
@@ -84,7 +86,7 @@ class BuildingUtil
 			$building->setProfit($res['PROFIT']);
 			$building->setLapse($res['LAPSE']);
 
-			return $user;
+			return $building;
 		}
 	}
 
@@ -106,7 +108,7 @@ class BuildingUtil
 		} else {
 			$arr = array();
 			for ($i = 0, $x = count($res); $i < $x; $i++) {
-				
+
 				$building = new Building($res[$i]['ID'], $res[$i]['NAME']);
 				$building->setCost($res[$i]['COST']);
 				$building->setXSize($res[$i]['XSIZE']);

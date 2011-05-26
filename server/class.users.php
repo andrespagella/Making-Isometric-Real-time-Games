@@ -104,5 +104,47 @@ class UserUtil
 			return $user;
 		}
 	}
+
+	final public function listUsers($start = null, $limit = null)
+	{
+		$query = "SELECT * FROM users ";
+
+		if ($start != null && $limit != null) {
+			$start = (int)$start;
+			$limit = (int)$limit;
+
+			$query .= "LIMIT $start, $limit ";
+		}
+
+		$res = $this->DBRef->GetAllResults($query);
+
+		if (count($res) == 0) {
+			return null;
+		} else {
+			$arr = [];
+			for ($i = 0, $x = count($res); $i < $x; $i++) {
+				
+				$user = new User($res[$i]['ID'], $res[$i]['NAME'], $res[$i]['EMAIL']);
+				$user->setPassword($res[$i]['PASSWORD']);
+				$user->setBalance($res[$i]['BALANCE']);
+				$user->setConfig($res[$i]['CONFIG']);
+				$user->setCreationTime($res[$i]['CREATIONTIME']);
+				$user->setLastUpdate($res[$i]['LASTUPDATE']);
+
+				array_push($arr, $user);
+			}
+
+			return $arr;
+		}
+	}
+
+	final public function removeUser($user)
+	{
+		$id = $user->getId();
+
+		$query = "DELETE FROM users WHERE ID = $id ";
+
+		return $this->DBRef->ExecQuery($query);
+	}
 }
 ?>

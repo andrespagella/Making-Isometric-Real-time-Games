@@ -32,25 +32,25 @@ class Building
 		$this->name = $name;
 	}
 
-	final public function getId() { return $this->id; }
+	final public function getId() { return (int)$this->id; }
 	final public function setId($id) { $this->id = (int)$id; }
 
 	final public function getName() { return $this->name; }
 	final public function setName($name) { $this->name = $name; }
 
-	final public function getCost() { return $this->cost; }
+	final public function getCost() { return (int)$this->cost; }
 	final public function setCost($cost) { $this->cost = (int)$cost; }
 
-	final public function getXSize() { return $this->xsize; }
+	final public function getXSize() { return (int)$this->xsize; }
 	final public function setXSize($xsize) { $this->xsize = $xsize; }
 
-	final public function getYSize() { return $this->ysize; }
+	final public function getYSize() { return (int)$this->ysize; }
 	final public function setYSize($ysize) { $this->ysize = (int)$ysize; }
 
-	final public function getProfit() { return $this->profit; }
+	final public function getProfit() { return (int)$this->profit; }
 	final public function setProfit($profit) { $this->profit = (int)$profit; }
 
-	final public function getLapse() { return $this->lapse; }
+	final public function getLapse() { return (int)$this->lapse; }
 	final public function setLapse($lapse) { $this->lapse = (int)$lapse; }
 }
 ?>

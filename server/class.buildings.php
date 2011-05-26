@@ -87,5 +87,47 @@ class BuildingUtil
 			return $user;
 		}
 	}
+
+	final public function listBuildings($start = null, $limit = null)
+	{
+		$query = "SELECT * FROM buildings ";
+
+		if ($start != null && $limit != null) {
+			$start = (int)$start;
+			$limit = (int)$limit;
+
+			$query .= "LIMIT $start, $limit ";
+		}
+
+		$res = $this->DBRef->GetAllResults($query);
+
+		if (count($res) == 0) {
+			return null;
+		} else {
+			$arr = [];
+			for ($i = 0, $x = count($res); $i < $x; $i++) {
+				
+				$building = new Building($res[$i]['ID'], $res[$i]['NAME']);
+				$building->setCost($res[$i]['COST']);
+				$building->setXSize($res[$i]['XSIZE']);
+				$building->setYSize($res[$i]['YSIZE']);
+				$building->setProfit($res[$i]['PROFIT']);
+				$building->setLapse($res[$i]['LAPSE']);
+
+				array_push($arr, $building);
+			}
+
+			return $arr;
+		}
+	}
+
+	final public function removeBuilding($building)
+	{
+		$id = $building->getId();
+
+		$query = "DELETE FROM buildings WHERE ID = $id ";
+
+		return $this->DBRef->ExecQuery($query);
+	}
 }
 ?>

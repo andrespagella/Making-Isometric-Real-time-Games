@@ -38,7 +38,7 @@ class User
 		}
 	}
 
-	final public function getId() { return $this->id; }
+	final public function getId() { return (int)$this->id; }
 	final public function setId($id) { $this->id = (int)$id; }
 
 	final public function getName() { return $this->name; }
@@ -56,16 +56,16 @@ class User
 	final public function getPassword() { return $this->password; }
 	final public function setPassword($password) { $this->password = sha1($password); }
 
-	final public function getBalance() { return $this->balance; }
+	final public function getBalance() { return (int)$this->balance; }
 	final public function setBalance($balance) { $this->balance = (int)$balance; }
 
 	final public function getConfig() { return $this->config; }
 	final public function setConfig($config) { $this->config = $config; }
 
-	final public function getCreationTime() { return $this->creationTime; }
+	final public function getCreationTime() { return (int)$this->creationTime; }
 	final public function setCreationTime($time) { $this->creationTime = (int)$time; }
 
-	final public function getLastUpdate() { return $this->lastUpdate; }
+	final public function getLastUpdate() { return (int)$this->lastUpdate; }
 	final public function setLastUpdate($time) { $this->lastUpdate = (int)$time; }
 }
 ?>

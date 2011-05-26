@@ -1,6 +1,6 @@
 <?php
 /**
- * User Building
+ * Building class
  *
  * Developed by Mario Andres Pagella (andres.pagella@gmail.com) 
  *

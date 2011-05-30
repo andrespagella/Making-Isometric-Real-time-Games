@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 12 - Grid modified to work with ATR (Adaptive Tile Refresh)</title>
+		
+		<script src="timer.js" charset="utf-8"></script>
+		<script src="sprite.js" charset="utf-8"></script>
+		<script charset="utf-8">
+
+			/*
+			 * FIXME 1, instead of clearing the specified area, clear the tiles, otherwise draw() won't draw some parts of it
+			 * FIXME 2, is the sprite class skipping the first frame? if so, why?
+			 */			
+
+			window.onload = function () {
+				var tile = {
+					width: 3,
+					height: 3
+				}
+
+				var grid = {
+					width: 100,
+					height: 100
+				}
+
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+
+				var man1 = new Sprite('../img/char1.png', 32, 32, 0, 96, 4, 200);
+				var man2 = new Sprite('../img/char2.png', 32, 32, 0, 224, 6, 400);
+				var man3 = new Sprite('../img/char3.png', 32, 32, 0, 128, 4, 600);
+
+				var timer = new Timer();
+
+				// Draw the entire grid
+				draw();
+				displayAnimatedSprites();
+
+				function displayAnimatedSprites() {
+					timer.update();
+
+					man1.setPosition(120, 60);
+					man2.setPosition(120, 102);
+					man3.setPosition(120, 141);
+
+					// Redraw just the area of the grid being changed
+					draw(man1.posX, man1.posY, man1.width, man1.height);
+					draw(man2.posX, man2.posY, man2.width, man2.height);
+					draw(man3.posX, man3.posY, man3.width, man3.height);
+
+					man1.animate(c, timer);
+					man2.animate(c, timer);
+					man3.animate(c, timer);
+
+					setTimeout(function() {
+						displayAnimatedSprites(timer.getSeconds());
+					}, 100);
+				}
+
+				function draw(srcX, srcY, destX, destY) {
+					srcX = (srcX === undefined) ? 0 : srcX;
+					srcY = (srcY === undefined) ? 0 : srcY;
+					destX = (destX === undefined) ? canvas.width : destX;
+					destY = (destY === undefined) ? canvas.height : destY;
+
+					c.fillStyle = '#FFFFFF';
+					c.fillRect (srcX, srcY, destX + 1, destY + 1);
+					c.fillStyle = '#000000';
+
+					var startRow = 0;
+					var startCol = 0;
+					var rowCount = startRow + Math.floor(canvas.width / tile.width) + 1;
+					var colCount = startCol + Math.floor(canvas.height / tile.height) + 1;
+
+					rowCount = ((startRow + rowCount) > grid.width) ? grid.width : rowCount;
+					colCount = ((startCol + colCount) > grid.height) ? grid.height : colCount;
+
+					for (var row = startRow; row < rowCount; row++) {
+						for (var col = startCol; col < colCount; col++) {
+							var tilePositionX = tile.width * row;
+							var tilePositionY = tile.height * col;
+
+							if (tilePositionX >= srcX && tilePositionY >= srcY &&
+								tilePositionX <= (srcX + destX) &&
+								tilePositionY <= (srcY + destY)) {
+
+								c.strokeStyle = '#CCCCCC';
+								c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
+							}
+						}
+					}
+				}
+			}
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="300" height="300"></canvas>
+    </body>
+</html>

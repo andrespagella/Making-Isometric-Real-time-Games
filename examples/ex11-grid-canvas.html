@@ -70,6 +70,7 @@
 				}
 
 				function draw() {
+
 					c.fillStyle = '#FFFFFF';
 					c.fillRect (0, 0, canvas.width, canvas.height);
 					c.fillStyle = '#000000';
@@ -103,10 +104,8 @@
 							}
 						}
 					}
-
-					setTimeout(function() {
-						draw();
-					}, 1);
+					
+					setTimeout(draw, 1);
 				}
 			}
 		</script>

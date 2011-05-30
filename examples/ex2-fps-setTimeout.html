@@ -4,14 +4,13 @@
 		<meta charset="UTF-8" />
 		<title>Canvas Example 2 (FPS Count)</title>
 		
-		<script type="text/javascript" charset="utf-8">	
+		<script charset="utf-8">	
 
-			window.onload = function () 
-			{
+			window.onload = function () {
 				var canvas = document.getElementById('myCanvas');
 				var c = canvas.getContext('2d');
 				
-				var fpsArray = new Array();
+				var fpsArray = [];
 				var fpsCount = 0;
 				var stopAt = 10;
 				var fps = 0;
@@ -24,12 +23,11 @@
 
 				draw(startTime);
 				
-				function draw (timeStamp)
-				{
+				function draw (timeStamp) {
 					var date = new Date();
 					ts = Math.round(date.getTime() / 1000);
 
-					if (timeStamp != ts) {
+					if (timeStamp !== ts) {
 						fps = fpsCount;
 						fpsCount = 0;
 						fpsArray.push(fps);
@@ -53,8 +51,7 @@
 					}
 				}
 
-				function showResults()
-				{
+				function showResults() {
 					var mean = 0;
 					var sum = 0;
 

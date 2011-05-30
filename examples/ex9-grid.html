@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 9 (Generating a 20 x 50 grid)</title>
+		
+		<script charset="utf-8">	
+			window.onload = function () {
+				var tileMap = [];
+				var grid = {
+					width: 20,
+					height: 50
+				};
+
+				initializeGrid();
+
+				function initializeGrid() {
+					for (var i = 0; i < grid.width; i++) {
+						tileMap[i] = [];
+						for (var j = 0; j < grid.height; j++) {
+							tileMap[i][j] = 0;
+						}
+					}
+				}
+			}
+		</script>
+    </head>
+    <body>
+		
+    </body>
+</html>

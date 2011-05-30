@@ -4,12 +4,12 @@
 		<meta charset="UTF-8" />
 		<title>Canvas Example 2 Alt (FPS Count)</title>
 		
-		<script type="text/javascript" charset="utf-8">	
+		<script charset="utf-8">	
 
 			// Code for the window.requestAnimFrame developed by Paul Irish <paul.irish at gmail dot com>
 			// Based on this W3C spec (still a draft) http://webstuff.nfshost.com/anim-timing/Overview.html
 			// shim layer with setTimeout fallback
-		    window.requestAnimFrame = (function(){
+		    window.requestAnimFrame = (function() {
 		      return  window.requestAnimationFrame       || 
 		              window.webkitRequestAnimationFrame || 
 		              window.mozRequestAnimationFrame    || 
@@ -20,12 +20,11 @@
 		              };
 		    })();
 
-			window.onload = function () 
-			{
+			window.onload = function() {
 				var canvas = document.getElementById('myCanvas');
 				var c = canvas.getContext('2d');
 				
-				var fpsArray = new Array();
+				var fpsArray = [];
 				var fpsCount = 0;
 				var fps = 0;
 				
@@ -34,11 +33,10 @@
 				
 				c.font = '20px _sans';
 
-				function draw ()
-				{
+				function draw() {
 					var date = new Date();
 					var s = date.getSeconds();
-					if (s != seconds) {
+					if (s !== seconds) {
 						seconds = s;
 
 						c.fillStyle = '#000000';

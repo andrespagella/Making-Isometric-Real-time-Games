@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<title>Canvas Example 5 (Clickthrough)</title>
 		
-		<script type="text/javascript" charset="utf-8">	
+		<script charset="utf-8">	
 			window.onload = function () {
 				var MIN_ALPHA_THRESHOLD = 10;
 				
@@ -14,14 +14,14 @@
 				document.addEventListener('click', detectElement, false);
 
 				function detectElement (e) {
-					var invisibleObjects = new Array();
+					var invisibleObjects = [];
 					var solidPixel = false;
 					var obj;
 
 					do {
 						obj = document.elementFromPoint(e.clientX, e.clientY);
 
-						if (obj == null || obj.tagName == 'BODY' || obj.tagName == 'HTML') {
+						if (obj === null || obj.tagName === 'BODY' || obj.tagName === 'HTML') {
 							break;
 						}
 
@@ -104,8 +104,8 @@
 							 * has been styled using a stylesheet.
 							 */	
 							if (obj.currentStyle) {
-								if (obj.currentStyle['backgroundColor'].length == 0) {
-									if (obj.currentStyle['backgroundImage'].length == 0) {
+								if (obj.currentStyle['backgroundColor'].length === 0) {
+									if (obj.currentStyle['backgroundImage'].length === 0) {
 										// No solid background color and no background image
 										return true;
 									} else {
@@ -118,8 +118,8 @@
 								}
 							} else if (window.getComputedStyle) {
 								var cs = document.defaultView.getComputedStyle(obj, null);
-								if (cs.getPropertyValue('background-color') == null ||
-									cs.getPropertyValue('background-color') == 'rgba(0, 0, 0, 0)') {
+								if (cs.getPropertyValue('background-color') === null ||
+									cs.getPropertyValue('background-color') === 'rgba(0, 0, 0, 0)') {
 
 									if (cs.getPropertyValue('background-image') == null || cs.getPropertyValue('background-image') == 'none') {
 										// No solid background color and no background image

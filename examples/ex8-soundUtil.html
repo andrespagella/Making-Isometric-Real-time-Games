@@ -3,26 +3,27 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Example8 (Sound Util - Simple Piano)</title>
-		<script type="text/javascript">
+		<script>
 			window.onload = function() {
-
+				var MAX_PLAYBACKS = 6;
 				var sources = [
 					["../sounds/piano.mp3", "audio/mp3"],
 					["../sounds/piano.ogg", "audio/ogg"]
 				];
 
 				// Check if we'll be able to run this example in the current browser
+				var su = new SoundUtil(MAX_PLAYBACKS);
 				var a = new Audio();
 				var failures = 0;
 
 				for (var i = 0; i < sources.length; i++) {
-					if (a.canPlayType(sources[i][1]) != "maybe" &&
-						a.canPlayType(sources[i][1]) != "probably") {
+					if (a.canPlayType(sources[i][1]) !== "maybe" &&
+						a.canPlayType(sources[i][1]) !== "probably") {
 						failures++;
 					}
 				}	
 
-				if (failures == sources.length) {
+				if (failures === sources.length) {
 					alert("This browser doesn't include support for neither MP3 nor OGG sound files.");
 				} else {
 					var vol = document.getElementById('volume');
@@ -40,84 +41,107 @@
 					document.getElementById('piano').addEventListener('click', function(e) { 
 						switch (e.target.getAttribute('id')) {
 							case 'c1':
-								SoundUtil.play(sources, 0, 1000, vol.value, false);	
+								su.play(sources, 0, 1000, vol.value, false);	
 								break;
 							case 'd':
-								SoundUtil.play(sources, 1, 1000, vol.value, false);	
+								su.play(sources, 1, 1000, vol.value, false);	
 								break;
 							case 'e':
-								SoundUtil.play(sources, 2, 1000, vol.value, false);	
+								su.play(sources, 2, 1000, vol.value, false);	
 								break;
 							case 'f':
-								SoundUtil.play(sources, 3, 1000, vol.value, false);	
+								su.play(sources, 3, 1000, vol.value, false);	
 								break;
 							case 'g':
-								SoundUtil.play(sources, 4, 1000, vol.value, false);	
+								su.play(sources, 4, 1000, vol.value, false);	
 								break;
 							case 'a':
-								SoundUtil.play(sources, 5, 1000, vol.value, false);	
+								su.play(sources, 5, 1000, vol.value, false);	
 								break;
 							case 'b':
-								SoundUtil.play(sources, 6, 1000, vol.value, false);	
+								su.play(sources, 6, 1000, vol.value, false);	
 								break;
 							case 'c2':
-								SoundUtil.play(sources, 7, 1000, vol.value, false);	
+								su.play(sources, 7, 1000, vol.value, false);	
 								break;
 						}
 					}, false);
 				}
 			}
 
-			var SoundUtil = {
-				maxPlaybacks: 6,
-				audioObjects: [], // Pool of audio objects available for reutilization
+			var SoundUtil = function(maxPlaybacks) {
+				this.maxPlaybacks = maxPlaybacks;
+				this.audioObjects = []; // Pool of audio objects available for reutilization
+			}
 
-				play: function(file, startTime, duration, volume, loop) {
-					// Get an audio object from pool
-					var audioObject = this.getAudioObject();
+			SoundUtil.prototype.play = function(file, startTime, duration, volume, loop) {
 
-					/** 
-					 * No audio objects are available on the pool. Don't play anything.
-					 * NOTE: This is the approach taken by toy organs, alternatively you
-					 * could also add objects into a queue to be played later on
-					 */
-					if (audioObject != null) {
-						audioObject.obj.loop = loop;
-						audioObject.obj.volume = volume;
+				// Get an audio object from pool
+				var audioObject = this.getAudioObject();
+				var suObj = this;
 
-						for (var i = 0; i < file.length; i++) {
-							if (audioObject.obj.canPlayType(file[i][1]) == "maybe" || 
-								audioObject.obj.canPlayType(file[i][1]) == "probably") {
-								audioObject.obj.src = file[i][0];
-								audioObject.obj.type = file[i][1];
-								break;
-							}
+				/** 
+				 * No audio objects are available on the pool. Don't play anything.
+				 * NOTE: This is the approach taken by toy organs, alternatively you
+				 * could also add objects into a queue to be played later on
+				 */
+				if (audioObject !== null) {
+					audioObject.obj.loop = loop;
+					audioObject.obj.volume = volume;
+
+					for (var i = 0; i < file.length; i++) {
+						if (audioObject.obj.canPlayType(file[i][1]) === "maybe" || 
+							audioObject.obj.canPlayType(file[i][1]) === "probably") {
+							audioObject.obj.src = file[i][0];
+							audioObject.obj.type = file[i][1];
+							break;
 						}
-
-						var playBack = function() {
-							// Remove the event listener, otherwise it will keep getting called over and over agian
-							audioObject.obj.removeEventListener('canplaythrough', playBack, false);
-							audioObject.obj.currentTime = startTime;
-							audioObject.obj.play();
-
-							// There's no need to listen if the object has finished playing if it's playing in loop mode
-							if (!loop) {
-								setTimeout(function() {
-									audioObject.obj.pause();
-									SoundUtil.freeAudioObject(audioObject);
-								}, duration);
-							}
-						}
-
-						audioObject.obj.addEventListener('canplaythrough', playBack, false);
 					}
-				},
 
-				getAudioObject: function() {
-					if (this.audioObjects.length == 0) {
+					var playBack = function() {
+						// Remove the event listener, otherwise it will keep getting called over and over agian
+						audioObject.obj.removeEventListener('canplaythrough', playBack, false);
+						audioObject.obj.currentTime = startTime;
+						audioObject.obj.play();
+
+						// There's no need to listen if the object has finished playing if it's playing in loop mode
+						if (!loop) {
+							setTimeout(function() {
+								audioObject.obj.pause();
+								suObj.freeAudioObject(audioObject);
+							}, duration);
+						}
+					}
+
+					audioObject.obj.addEventListener('canplaythrough', playBack, false);
+				}
+			}
+
+			SoundUtil.prototype.getAudioObject = function() {
+				if (this.audioObjects.length === 0) {
+					var a = new Audio();
+					var audioObject = {
+						id: 0,
+						obj: a,
+						busy: true
+					}
+
+					this.audioObjects.push (audioObject);
+
+					return audioObject;
+				} else {
+					for (var i = 0; i < this.audioObjects.length; i++) {
+						if (!this.audioObjects[i].busy) {
+							this.audioObjects[i].busy = true;
+							return this.audioObjects[i];
+						}
+					}
+
+					// No audio objects are free. Can we create a new one?
+					if (this.audioObjects.length <= this.maxPlaybacks) {
 						var a = new Audio();
 						var audioObject = {
-							id: 0,
+							id: this.audioObjects.length,
 							obj: a,
 							busy: true
 						}
@@ -126,37 +150,16 @@
 
 						return audioObject;
 					} else {
-						for (var i = 0; i < this.audioObjects.length; i++) {
-							if (!this.audioObjects[i].busy) {
-								this.audioObjects[i].busy = true;
-								return this.audioObjects[i];
-							}
-						}
-
-						// No audio objects are free. Can we create a new one?
-						if (this.audioObjects.length <= this.maxPlaybacks) {
-							var a = new Audio();
-							var audioObject = {
-								id: this.audioObjects.length,
-								obj: a,
-								busy: true
-							}
-
-							this.audioObjects.push (audioObject);
-
-							return audioObject;
-						} else {
-							return null;
-						}
+						return null;
 					}
-				},
+				}
+			}
 
-				freeAudioObject: function(audioObject) {
-					for (var i = 0; i < this.audioObjects.length; i++) {
-						if (this.audioObjects[i].id == audioObject.id) {
-							this.audioObjects[i].currentTime = 0;
-							this.audioObjects[i].busy = false;
-						}
+			SoundUtil.prototype.freeAudioObject = function(audioObject) {
+				for (var i = 0; i < this.audioObjects.length; i++) {
+					if (this.audioObjects[i].id === audioObject.id) {
+						this.audioObjects[i].currentTime = 0;
+						this.audioObjects[i].busy = false;
 					}
 				}
 			}

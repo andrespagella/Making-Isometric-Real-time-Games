@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<title>Canvas Example 6 (LocalStorage)</title>
 		
-		<script type="text/javascript" charset="utf-8">	
+		<script charset="utf-8">	
 			window.onload = function () {
 				var binMatrix = null;
 				var matrixSize = 25;
@@ -31,7 +31,7 @@
 					try {
 						// If we haven't set the key yet, or we removed its contents the "m" variable
 						// will be null.
-						if (m == null) {
+						if (m === null) {
 							alert("You haven't stored a matrix yet.");
 						} else {
 							// Otherwise, we need to "parse" the contents back to an array.
@@ -56,7 +56,7 @@
 							for (var j = 0; j < matrixSize; j++) {
 								var pos = (i + j) + (i * matrixSize);
 								
-								if (matrix.childNodes[pos].tagName == "INPUT") {
+								if (matrix.childNodes[pos].tagName === "INPUT") {
 									binMatrix[i][j] = (matrix.childNodes[pos].checked) ? 1 : 0;
 								}
 							}
@@ -93,10 +93,10 @@
 			 * Generic matrix initialization routine
 			 */
 			function initializeMatrix(size) {
-				var m = new Array(size);
+				var m = [];
 
 				for (var i = 0; i < size; i++) {
-					m[i] = new Array(size);
+					m[i] = [];
 					for (var j = 0; j < size; j++) {
 						m[i][j] = 0;
 					}
@@ -120,9 +120,9 @@
 				for (var i = 0, x = m.length; i < x; i++) {
 					for (var j = 0, r = m[i].length; j < r; j++) {
 						str += '<input type="checkbox" class="' + i + ' - ' + j + '" ';
-						str += (m[i][j] == 1) ? 'checked' : '';
+						str += (m[i][j] === 1) ? 'checked' : '';
 						str += ' />';
-						str += ((j + 1) == r) ? '<div class="clb"></div>' : '';
+						str += ((j + 1) === r) ? '<div class="clb"></div>' : '';
 					}
 				}
 

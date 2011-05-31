@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 16 - (Capturing click events and translating them to matrix coordinates)</title>
+		
+		<script charset="utf-8">	
+
+			window.onload = function () {
+				var grid = {
+					width: 10,
+					height: 10
+				}
+
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+
+				var tileMap = [];
+
+				var tile = new Image();
+				tile.src = "../img/tile.png";
+
+				var dirt = new Image();
+				dirt.src = "../img/dirt.png";
+
+				canvas.addEventListener('mousedown', handleMouseDown, false);
+
+				draw();
+
+				function handleMouseDown(e) {
+					var gridOffsetY = grid.height;
+					var gridOffsetX = grid.width;
+
+					// Take into account the offset on the X axis caused by centering the grid horizontally
+					gridOffsetX += (canvas.width / 2) - (tile.width / 2);
+
+					var col = (e.clientY - gridOffsetY) * 2;
+					col = ((gridOffsetX + col) - e.clientX) / 2;
+					
+					var row = ((e.clientX + col) - tile.height) - gridOffsetX;
+
+					row = Math.round(row / tile.height);
+					col = Math.round(col / tile.height);
+
+					if (tileMap[row] === undefined) {
+						tileMap[row] = [];
+					}
+
+					tileMap[row][col] = 1;
+
+					draw();
+				}
+
+				
+				function draw() {
+					
+					c.clearRect (0, 0, canvas.width, canvas.height);
+
+					for (var row = 0; row < 10; row++) {
+						for (var col = 0; col < 10; col++) {
+
+							var tilePositionX = (row - col) * tile.height;
+
+							// Center the grid horizontally
+							tilePositionX += (canvas.width / 2) - (tile.width / 2);
+
+							var tilePositionY = (row + col) * (tile.height / 2);
+
+							if (tileMap[row] != null && tileMap[row][col] != null) {
+								c.drawImage(dirt, Math.round(tilePositionX), Math.round(tilePositionY), dirt.width, dirt.height);
+							} else {
+								c.drawImage(tile, Math.round(tilePositionX), Math.round(tilePositionY), tile.width, tile.height);	
+							}
+						}	
+					}
+				}
+			}
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="600" height="300"></canvas>
+    </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 13 - (A* working on a grid with unset indexes)</title>
+		
+		<script charset="utf-8" src="astar.js"></script>
+		<script charset="utf-8">	
+
+			window.onload = function () {
+				var tileMap = [];
+
+				var tile = {
+					width: 6,
+					height: 6
+				}
+
+				var grid = {
+					width: 100,
+					height: 100
+				}
+
+				//var a = new aStar(tileMap, grid.width, grid.height, {x: 0, y: 0}, {x: 20, y: 20});
+
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+
+				// Generate 300 random elements
+				for (var i = 0; i < 300; i++) {
+					generateRandomElement();
+				}
+
+				// Draw the entire grid
+				draw();
+
+				function generateRandomElement() {
+					var rndRow = Math.floor(Math.random() * (grid.width + 1));
+					var rndCol = Math.floor(Math.random() * (grid.height + 1));
+
+
+					if (tileMap[rndRow] == null) {
+						tileMap[rndRow] = [];
+					}
+					tileMap[rndRow][rndCol] = 1;					
+				}
+
+				function draw(srcX, srcY, destX, destY) {
+					srcX = (srcX === undefined) ? 0 : srcX;
+					srcY = (srcY === undefined) ? 0 : srcY;
+					destX = (destX === undefined) ? canvas.width : destX;
+					destY = (destY === undefined) ? canvas.height : destY;
+
+					c.fillStyle = '#FFFFFF';
+					c.fillRect (srcX, srcY, destX + 1, destY + 1);
+					c.fillStyle = '#000000';
+
+					var startRow = 0;
+					var startCol = 0;
+					var rowCount = startRow + Math.floor(canvas.width / tile.width) + 1;
+					var colCount = startCol + Math.floor(canvas.height / tile.height) + 1;
+
+					rowCount = ((startRow + rowCount) > grid.width) ? grid.width : rowCount;
+					colCount = ((startCol + colCount) > grid.height) ? grid.height : colCount;
+
+					for (var row = startRow; row < rowCount; row++) {
+						for (var col = startCol; col < colCount; col++) {
+							var tilePositionX = tile.width * row;
+							var tilePositionY = tile.height * col;
+
+							if (tilePositionX >= srcX && tilePositionY >= srcY &&
+								tilePositionX <= (srcX + destX) &&
+								tilePositionY <= (srcY + destY)) {
+
+								if (tileMap[row] != null && tileMap[row][col] != null) {
+									if (tileMap[row][col] == 0) {
+										c.fillStyle = '#CC0000';
+									} else {
+										c.fillStyle = '#0000FF';
+									}
+
+									c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
+								} else {
+									c.strokeStyle = '#CCCCCC';
+									c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
+								}
+							}
+						}
+					}
+				}
+			}
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="600" height="300"></canvas>
+		<br />
+
+    </body>
+</html>

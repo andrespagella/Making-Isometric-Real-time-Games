@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 14 - (Convert square texture to isometric diamond)</title>
+		
+		<script charset="utf-8">	
+
+			window.onload = function () {
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+
+				var texture = new Image();
+				texture.src = '../img/squareTexture.png';
+
+				drawDiamond();
+				
+				function drawDiamond() {
+					// Save the current context
+					c.save();
+					
+					// Scale the results to a isometric/dimetric 2:1 ratio
+					c.scale(1, 0.5);
+					
+					// Rotate the context 45 degrees
+					c.rotate(45 * Math.PI / 180);
+
+					// If we rotate the image on 0, 0 half of it will be displayed outside the canvas, so compensate
+					c.drawImage(texture, 0, 0, texture.width, texture.height, texture.width / 2, (texture.height / 2) * -1, texture.width, texture.height);
+
+					// Restore the context
+					c.restore();
+				}	
+			}
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="300" height="300"></canvas>
+    </body>
+</html>

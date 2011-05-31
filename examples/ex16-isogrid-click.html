@@ -42,13 +42,17 @@
 					row = Math.round(row / tile.height);
 					col = Math.round(col / tile.height);
 
-					if (tileMap[row] === undefined) {
-						tileMap[row] = [];
+					// Check the boundaries!
+					if (row >= 0 && 
+						col >= 0 && 
+						row <= grid.width &&
+						col <= grid.height) {
+
+						tileMap[row] = (tileMap[row] === undefined) ? [] : tileMap[row];
+							
+						tileMap[row][col] = 1;
+						draw();
 					}
-
-					tileMap[row][col] = 1;
-
-					draw();
 				}
 
 				
@@ -56,8 +60,8 @@
 					
 					c.clearRect (0, 0, canvas.width, canvas.height);
 
-					for (var row = 0; row < 10; row++) {
-						for (var col = 0; col < 10; col++) {
+					for (var row = 0; row < grid.width; row++) {
+						for (var col = 0; col < grid.height; col++) {
 
 							var tilePositionX = (row - col) * tile.height;
 

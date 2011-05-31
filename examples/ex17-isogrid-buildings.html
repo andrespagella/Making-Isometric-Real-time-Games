@@ -20,8 +20,8 @@
 				var tile = new Image();
 				tile.src = "../img/tile.png";
 
-				var dirt = new Image();
-				dirt.src = "../img/dirt.png";
+				var building = new Image();
+				building.src = "../img/icecream.png";
 
 				canvas.addEventListener('mousedown', handleMouseDown, false);
 
@@ -71,7 +71,8 @@
 							var tilePositionY = (row + col) * (tile.height / 2);
 
 							if (tileMap[row] != null && tileMap[row][col] != null) {
-								c.drawImage(dirt, Math.round(tilePositionX), Math.round(tilePositionY), dirt.width, dirt.height);
+								tilePositionY -= building.height - tile.height;
+								c.drawImage(building, Math.round(tilePositionX), Math.round(tilePositionY), building.width, building.height);
 							} else {
 								c.drawImage(tile, Math.round(tilePositionX), Math.round(tilePositionY), tile.width, tile.height);	
 							}

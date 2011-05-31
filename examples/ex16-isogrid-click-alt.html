@@ -29,11 +29,13 @@
 				draw();
 
 				// There's probably a more efficient way to do this
-				function rotateMatrix(matrix, mW, mH) {
+				function rotateMatrix(matrix, mW, mH, sW, sH) {
 				    var m = [];
+				    var sW = (sW === undefined) ? 0 : sW;
+				    var sH = (sH === undefined) ? 0 : sH;
 
-				    for (var i = 0; i < mW; i++) {
-				        for (var j = 0; j < mH; j++) {
+				    for (var i = sW; i < mW; i++) {
+				        for (var j = sH; j < mH; j++) {
 				        	var row = (mW - j) - 1;
 
 				        	if (tileMap[row] !== undefined && tileMap[row][i]) {

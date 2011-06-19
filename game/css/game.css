@@ -1,0 +1,96 @@
+@-webkit-keyframes moveFromLeftToRight {
+	0% {
+		-webkit-transform: translateX(-5000px) translateY(50px) translateZ(0px);
+	}
+	50% {
+		-webkit-transform: translateX(0px) translateY(50px) translateZ(0px);
+	}
+	100% {
+		-webkit-transform: translateX(5000px) translateY(50px) translateZ(0px);
+	}
+}
+
+@-moz-keyframes moveFromLeftToRight {
+	0% {
+		-moz-transform: translateX(-5000px) translateY(50px);
+	}
+	50% {
+		-moz-transform: translateX(0px) translateY(50px);
+	}
+	100% {
+		-moz-transform: translateX(5000px) translateY(50px);
+	}
+}
+
+@-ms-keyframes moveFromLeftToRight {
+	0% {
+		-ms-transform: translateX(-5000px) translateY(50px);
+	}
+	50% {
+		-ms-transform: translateX(0px) translateY(50px);
+	}
+	100% {
+		-ms-transform: translateX(5000px) translateY(50px);
+	}
+}
+
+@-o-keyframes moveFromLeftToRight {
+	0% {
+		-o-transform: translateX(-5000px) translateY(50px);
+	}
+	50% {
+		-o-transform: translateX(0px) translateY(50px);
+	}
+	100% {
+		-o-transform: translateX(5000px) translateY(50px);
+	}
+}
+
+@keyframes moveFromLeftToRight {
+	0% {
+		transform: translateX(-5000px) translateY(50px);
+	}
+	50% {
+		transform: translateX(0px) translateY(50px);
+	}
+	100% {
+		transform: translateX(5000px) translateY(50px);
+	}
+}
+	
+div.cloud {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 500;
+	background: transparent url(../../img/spritesheet.png) no-repeat -10px -257px;
+	width: 566px;
+	height: 243px;
+
+	pointer-events: none;
+
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-name: moveFromLeftToRight;
+	-webkit-animation-duration: 60s;
+	-webkit-animation-iteration-count: infinite;
+
+	-moz-animation-timing-function: linear;
+	-moz-animation-name: moveFromLeftToRight;
+	-moz-animation-duration: 60s;
+	-moz-animation-iteration-count: infinite;
+
+	-ms-animation-timing-function: linear;
+	-ms-animation-name: moveFromLeftToRight;
+	-ms-animation-duration: 60s;
+	-ms-animation-iteration-count: infinite;
+
+	-o-animation-timing-function: linear;
+	-o-animation-name: moveFromLeftToRight;
+	-o-animation-duration: 60s;
+	-o-animation-iteration-count: infinite;
+
+	animation-timing-function: linear;
+	animation-name: moveFromLeftToRight;
+	animation-duration: 60s;
+	animation-iteration-count: infinite;
+}

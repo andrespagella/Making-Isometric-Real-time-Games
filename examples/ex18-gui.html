@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+
+		<!-- We'll take care of the zoom ourselves -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<!-- iPhone icon + chromeless browser -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+		<!-- iPhone homescreen icon -->
+		<link rel="apple-touch-icon" href="../img/touristResortIcon.png" /> 
+		<link rel="apple-touch-icon-precomposed" href="../img/touristResortIcon.png"/>
+
+		<!-- Chrome Frame -->
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+		<title>Example 18 - Graphical User Interface</title>
+		
+		<link rel="stylesheet" href="ui-style.css" />
+		<script src="../utils/modernizr-1.7.min.js" charset="utf-8"></script>
+		<script src="game-ex18.js" charset="utf-8"></script>
+		<script charset="utf-8">
+
+			// Enums
+			var Keys = {
+				UP: 38,
+				DOWN: 40,
+				LEFT: 37,
+				RIGHT: 39,
+				W: 87,
+				A: 65,
+				S: 83,
+				D: 68,
+				Z: 90,
+				X: 88,
+				R: 82
+			}
+
+			var Tools = {
+				current: 4, // Default tool
+				/* - */
+				MOVE: 0,
+				ZOOM_IN: 1,
+				ZOOM_OUT: 2,
+				DEMOLISH: 3,
+				SELECT: 4,
+				BUILD: 5
+			}
+
+			window.onload = function () {
+
+				var canvas = document.getElementById('gameCanvas');
+				var game = document.getElementById('game');
+
+				// Initialize the game object
+				var g = new Game(canvas, game, 500, 500);
+
+				var pointer = {
+					DOWN: 'mousedown',
+					UP: 'mouseup',
+					MOVE: 'mousemove'
+				};
+
+				if (Modernizr.touch){
+					pointer.DOWN = 'ontouchstart';
+					pointer.UP = 'ontouchend';
+					pointer.MOVE = 'ontouchmove';
+				}
+
+				// Set up the event listeners
+				window.addEventListener('resize', function() { g.doResize(); }, false);
+				canvas.addEventListener(pointer.DOWN, function(e) { g.handleMouseDown(e); }, false);
+				canvas.addEventListener(pointer.MOVE, function(e) { g.handleDrag(e); }, false);
+				window.addEventListener(pointer.UP, function(e) { g.handleMouseUp(e); }, false);
+
+				if (Modernizr.touch){
+					// Detect gestures
+					window.addEventListener('ongestureend', function(e) { g.handleGestureEnd(e); }, false);
+
+					// Device orientation
+					if (window.orientation) {
+						window.addEventListener('orientationchange', g.handleOrientationChange, false);		
+					}
+				} else {
+					window.addEventListener('keydown', function(e) { g.handleKeyDown(e); }, false);
+
+					// Detect mousewheel scrolling
+					window.addEventListener('mousewheel', function(e) { g.handleScroll(e); }, false);
+					window.addEventListener('DOMMouseScroll', function(e) { g.handleScroll(e); }, false);
+				}
+
+				// Listen for GUI events
+				var ui = document.getElementById('ui');
+				ui.addEventListener(pointer.UP, function(e) {
+					switch(e.target.getAttribute('id')) {
+						case 'panel-toggle':
+							var panelContainer = document.getElementById('panel-container');
+							var classes = panelContainer.getAttribute('class');
+
+							if (classes != null && classes.length > 0) {
+								panelContainer.setAttribute('class', '');
+								document.getElementById('panel-toggle').innerHTML = 'Cancel';
+							} else {
+								panelContainer.setAttribute('class', 'hidden');
+								document.getElementById('panel-toggle').innerHTML = 'Build';
+							}
+							break;
+						case 'select':
+							selectTool(Tools.SELECT, document.getElementById('select'));
+							break;
+						case 'move':
+							selectTool(Tools.MOVE, document.getElementById('move'));
+							break;
+						case 'zoomIn':
+							selectTool(Tools.ZOOM_IN, document.getElementById('zoomIn'));
+							break;
+						case 'zoomOut':
+							selectTool(Tools.ZOOM_OUT, document.getElementById('zoomOut'));
+							break;
+						case 'rotate':
+							g.rotateGrid();
+							g.draw();
+							break;
+						case 'demolish':
+							selectTool(Tools.DEMOLISH, document.getElementById('demolish'));
+							break;
+						default:
+							// He didn't click on any option and actually click on an empty section of the UI, fallback to the canvas.
+							e.srcElement = canvas;
+							e.target = canvas;
+							e.toElement = canvas;
+							
+							g.handleMouseDown(e);
+
+							break;
+					}
+				}, false);
+			}
+
+			function selectTool(tool, elem) {
+
+				// Remove the "active" class from any element inside the div#tools ul
+				for (var i = 0, x = elem.parentNode.childNodes.length; i < x; i++) {
+					if (elem.parentNode.childNodes[i].tagName == "LI") {
+						elem.parentNode.childNodes[i].className = null;
+					}
+				}
+
+				elem.className += "active";
+
+				switch(tool) {
+					case Tools.SELECT:
+						Tools.current = Tools.SELECT;
+						break;
+					case Tools.MOVE:
+						Tools.current = Tools.MOVE;
+						break;
+					case Tools.ZOOM_IN:
+						Tools.current = Tools.ZOOM_IN;
+						break;
+					case Tools.ZOOM_OUT:
+						Tools.current = Tools.ZOOM_OUT;
+						break;
+					case Tools.DEMOLISH:
+						Tools.current = Tools.DEMOLISH;
+						break;
+				}
+
+			}
+		</script>
+    </head>
+    <body>
+    	<div id="game" class="rot0deg">
+
+			<canvas id="gameCanvas" width="1" height="1"></canvas>
+			<div id="ui">
+				<div id="top">
+					Account Balance: <span id="balance">0</span> Coins
+				</div>
+				<div id="tools">
+					<ul>
+						<li id="select" class="active"></li>
+						<li id="move"></li>
+						<li id="zoomIn"></li>
+						<li id="zoomOut"></li>
+						<li id="rotate"></li>
+						<li id="demolish"></li>
+					</ul>
+				</div>
+				<div id="panel-container" class="hidden">
+					<a href="javascript:void(0)" id="panel-toggle">Build</a>
+					<div id="panel">
+						<h3>Choose a building:</h3>
+						<ul id="buildings">
+							<li>
+								<h2>Building Name</h2>
+								<p>
+									Description
+									<br />
+									<span>$Cost</span>
+								</p>
+							</li>
+
+							<li>
+								<h2>Building Name</h2>
+								<p>
+									Description
+									<br />
+									<span>$Cost</span>
+								</p>
+							</li>
+
+							<li>
+								<h2>Building Name</h2>
+								<p>
+									Description
+									<br />
+									<span>$Cost</span>
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+    </body>
+</html>

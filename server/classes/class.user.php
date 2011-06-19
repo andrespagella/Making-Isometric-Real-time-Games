@@ -28,7 +28,7 @@ class User
 		if ($id != null) {
 			$this->setId($id);
 		}
-
+		
 		$this->setName($name);
 		$this->setEmail($email);
 	}

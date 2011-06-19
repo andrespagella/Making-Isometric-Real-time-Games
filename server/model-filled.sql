@@ -17,7 +17,7 @@ CREATE TABLE buildings (
 
 INSERT INTO buildings VALUES 
 	(1, 'Ice Cream Shop', 250, 1, 1, 5, 1800), 
-	(2, 'Hotel', 1000, 4, 4, 30, 3600), 
+	(2, 'Hotel', 1000, 2, 2, 30, 3600), 
 	(3, 'Cinema', 500, 2, 2, 12, 1800),
 	(4, 'Tree', 20, 1, 1, null, null);
      
@@ -40,13 +40,5 @@ CREATE TABLE building_instances (
 	BUILDINGID int(10) unsigned NOT NULL,
 	XPOS int(3) unsigned NOT NULL,
 	YPOS int(3) unsigned NOT NULL,
-	CONSTRAINT UIDFK 
-		FOREIGN KEY (ID) REFERENCES users (ID) 
-			ON UPDATE RESTRICT 
-			ON DELETE CASCADE,
-	CONSTRAINT BIDFK 
-		FOREIGN KEY (ID) REFERENCES buildings (ID) 
-			ON UPDATE RESTRICT 
-			ON DELETE CASCADE,
 	PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

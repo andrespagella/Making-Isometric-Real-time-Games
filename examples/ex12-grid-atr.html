@@ -8,11 +8,6 @@
 		<script src="sprite.js" charset="utf-8"></script>
 		<script charset="utf-8">
 
-			/*
-			 * FIXME 1, instead of clearing the specified area, clear the tiles, otherwise draw() won't draw some parts of it
-			 * FIXME 2, is the sprite class skipping the first frame? if so, why?
-			 */			
-
 			window.onload = function () {
 				var tile = {
 					width: 3,
@@ -40,9 +35,9 @@
 				function displayAnimatedSprites() {
 					timer.update();
 
-					man1.setPosition(120, 60);
+					man1.setPosition(123, 60);
 					man2.setPosition(120, 102);
-					man3.setPosition(120, 141);
+					man3.setPosition(120, 156);
 
 					// Redraw just the area of the grid being changed
 					draw(man1.posX, man1.posY, man1.width, man1.height);

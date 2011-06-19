@@ -14,6 +14,8 @@ body {
 	color: black;
 }
 
+.hidden { display: none; }
+
 #game.rot0deg {
 	-webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotate(0deg);
 	-moz-transform: translateX(0px) translateY(0px) rotate(0deg);
@@ -204,14 +206,14 @@ body {
 	box-shadow: 1px 1px 5px #000;
 }
 
-#ui #tools li#select { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px 7px; }
-#ui #tools li#move { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -28px; }
-#ui #tools li#zoomIn {	background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -64px; }
-#ui #tools li#zoomOut { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -100px; }
-#ui #tools li#load { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -132px; }
-#ui #tools li#save { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -166px; }
-#ui #tools li#rotate { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -204px; }
-#ui #tools li#demolish { background: rgb(57,191,191) url(../img/ui-icons.png) no-repeat 5px -243px; }
+#ui #tools li#select { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px 7px; }
+#ui #tools li#move { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -28px; }
+#ui #tools li#zoomIn {	background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -64px; }
+#ui #tools li#zoomOut { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -100px; }
+#ui #tools li#load { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -132px; }
+#ui #tools li#save { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -166px; }
+#ui #tools li#rotate { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -204px; }
+#ui #tools li#demolish { background: rgb(57,191,191) url(../../img/ui-icons.png) no-repeat 5px -243px; }
 
 #ui #tools li.active {
 	-webkit-box-shadow: inset 1px 1px 20px #FFF, 1px 1px 20px #FFF;

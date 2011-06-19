@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Example 17 - (Placing buildings)</title>
+		
+		<script charset="utf-8">	
+			var Cinema = function(instanceId) {
+				this.buildingTypeId = 1; // It's a cinema
+				this.instanceId = null;
+
+				this.texture = new Image();
+				this.texture.src = "../img/cinema.png";
+
+				this.width = this.texture.width;
+				this.height = this.texture.height;
+
+				this.tileWidth = 1;
+				this.tileHeight = 1;
+			}			
+
+			var BuildingPortion = function(buildingTypeId, x, y) {
+				this.buildingTypeId = buildingTypeId;
+				this.x = x;
+				this.y = y;
+			}
+
+			window.onload = function () {
+				var grid = {
+					width: 10,
+					height: 10
+				}
+
+				var canvas = document.getElementById('myCanvas');
+				var c = canvas.getContext('2d');
+
+				var tileMap = [];
+
+				var tile = new Image();
+				tile.src = "../img/tile.png";
+
+				var buildingCounter = 0; // In reality, the building count is being performed server-side in the database
+
+				canvas.addEventListener('mousedown', handleMouseDown, false);
+
+				draw();
+
+				function handleMouseDown(e) {
+					var gridOffsetY = grid.height;
+					var gridOffsetX = grid.width;
+
+					// Take into account the offset on the X axis caused by centering the grid horizontally
+					gridOffsetX += (canvas.width / 2) - (tile.width / 2);
+
+					var col = (e.clientY - gridOffsetY) * 2;
+					col = ((gridOffsetX + col) - e.clientX) / 2;
+					
+					var row = ((e.clientX + col) - tile.height) - gridOffsetX;
+
+					row = Math.round(row / tile.height);
+					col = Math.round(col / tile.height);
+
+					// Create the building object
+					var cinema = new Cinema(buildingCounter);
+
+					// Check the boundaries!
+					if (row >= 0 && 
+						col >= 0 && 
+						row <= grid.width &&
+						col <= grid.height) {
+
+						tileMap[row] = (tileMap[row] === undefined) ? [] : tileMap[row];
+						
+						// Do we have enough space to place this building on the grid?
+						if ((row - cinema.tileWidth) < 0 || (col - cinema.tileHeight) < 0) {
+							alert("Invalid Location!\nPart of the building will appear outside the grid.");
+							return;
+						}
+
+						// Now check that the tiles that the building will occupy are not occupied by other buildings
+						for (var i = row - cinema.tileWidth; i <= row; i++) {
+							for (var j = col - cinema.tileHeight; j <= col; j++) {
+								if (tileMap[i] != undefined && tileMap[i][j] != null) {
+									alert("There's another building there!")
+									return;
+								}
+							}
+						}
+
+						// Place the building
+						for (var i = row - cinema.tileWidth; i <= row; i++) {
+							for (var j = col - cinema.tileHeight; j <= col; j++) {
+								tileMap[i] = (tileMap[i] == undefined) ? [] : tileMap[i];
+
+								tileMap[i][j] = (i == row && j == col) ? cinema : new BuildingPortion(cinema.buildingTypeId, i, j);
+							}
+						}
+
+						buildingCounter++;
+
+						draw();
+					}
+				}
+
+				
+				function draw() {
+					
+					c.clearRect (0, 0, canvas.width, canvas.height);
+
+					for (var row = 0; row < 10; row++) {
+						for (var col = 0; col < 10; col++) {
+
+							var tilePositionX = (row - col) * tile.height;
+
+							// Center the grid horizontally
+							tilePositionX += (canvas.width / 2) - (tile.width / 2);
+
+							var tilePositionY = (row + col) * (tile.height / 2);
+
+							if (tileMap[row] != null && tileMap[row][col] != null) {
+								tilePositionY -= tileMap[row][col].height - tile.height;
+								tilePositionX -= (tileMap[row][col].width / 2) - (tile.width / 2);
+								
+								if (!(tileMap[row][col] instanceof BuildingPortion)) {
+									c.drawImage(tileMap[row][col].texture, Math.round(tilePositionX), Math.round(tilePositionY), tileMap[row][col].width, tileMap[row][col].height);
+								}
+							} else {
+								c.drawImage(tile, Math.round(tilePositionX), Math.round(tilePositionY), tile.width, tile.height);	
+							}
+						}	
+					}
+				}
+			}
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas" width="600" height="300"></canvas>
+    </body>
+</html>

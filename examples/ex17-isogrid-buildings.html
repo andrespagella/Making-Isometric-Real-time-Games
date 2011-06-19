@@ -72,6 +72,7 @@
 
 							if (tileMap[row] != null && tileMap[row][col] != null) {
 								tilePositionY -= building.height - tile.height;
+								tilePositionX -= (building.width / 2) - (tile.width / 2);
 								c.drawImage(building, Math.round(tilePositionX), Math.round(tilePositionY), building.width, building.height);
 							} else {
 								c.drawImage(tile, Math.round(tilePositionX), Math.round(tilePositionY), tile.width, tile.height);	

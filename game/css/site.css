@@ -1,0 +1,79 @@
+html {
+	height: 100%;
+	min-width: 480px;
+	min-height: 320px;
+}
+body { 
+	font-family: Arial, Tahoma, sans-serif;
+	text-align: center; 
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0, #ceefff),
+	    color-stop(1, #52bcff)
+	);
+	background-image: -webkit-linear-gradient(center bottom, #ceefff 0%, #52bcff 100%);
+	background-image: -ms-linear-gradient(center bottom, #ceefff 0%, #52bcff 100%);
+	background-image: -o-linear-gradient(center bottom, #ceefff 0%, #52bcff 100%);
+	background-image: -moz-linear-gradient(center bottom, #ceefff 0%, #52bcff 100%);
+	background-image: linear-gradient(center bottom, #ceefff 0%, #52bcff 100%);
+}
+
+div.hidden { display: none; }
+
+input {
+	border: none;
+	font-size: 12px;
+	padding: 3px;
+
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-ms-border-radius: 3px;
+	border-radius: 3px;
+
+	-webkit-box-shadow: inset 2px 2px 3px #666;
+	-moz-box-shadow: inset 2px 2px 3px #666;
+	-o-box-shadow: inset 2px 2px 3px #666;
+	-ms-box-shadow: inset 2px 2px 3px #666;
+	box-shadow: inset 2px 2px 3px #666;
+}
+
+input.button {
+	margin-top: 10px;
+	padding: 5px 10px 5px 10px;
+	font-weight: bold;
+	font-size: 14px;
+	color: white;
+	text-shadow: #2477c6 -1px -1px 1px;
+
+	border: 1px solid #2477c6;
+
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0, #2477c6),
+	    color-stop(1, #52bcff)
+	);
+	background-image: -webkit-linear-gradient(center bottom, #2477c6 0%, #52bcff 100%);
+	background-image: -ms-linear-gradient(center bottom, #2477c6 0%, #52bcff 100%);
+	background-image: -o-linear-gradient(center bottom, #2477c6 0%, #52bcff 100%);
+	background-image: -moz-linear-gradient(center bottom, #2477c6 0%, #52bcff 100%);
+	background-image: linear-gradient(center bottom, #2477c6 0%, #52bcff 100%);
+
+	-webkit-box-shadow: 2px 2px 3px #666;
+	-moz-box-shadow: 2px 2px 3px #666;
+	-o-box-shadow: 2px 2px 3px #666;
+	-ms-box-shadow: 2px 2px 3px #666;
+	box-shadow: 2px 2px 3px #666;
+}
+
+input.button:active {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-o-box-shadow: none;
+	-ms-box-shadow: none;
+	box-shadow: none;
+}

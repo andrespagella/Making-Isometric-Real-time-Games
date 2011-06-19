@@ -6,6 +6,6 @@
 	define('DB_NAME', 'mygame');
 
 	// Grid size
-	define('GRID_X', 50);
-	define('GRID_Y', 50);
+	define('GRID_X', 250);
+	define('GRID_Y', 250);
 ?>

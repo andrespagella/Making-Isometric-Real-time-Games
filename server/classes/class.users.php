@@ -46,9 +46,11 @@ class UserUtil
 	{
 		$userId = (int)$userId;
 	
-		$query = "SELECT balance FROM users WHERE ID = $userId ";
+		$query = "SELECT BALANCE FROM users WHERE ID = $userId ";
 		
-		return $this->DBRef->GetSingleResult($query);
+		$res = $this->DBRef->GetSingleResult($query);
+
+		return $res['BALANCE'];
 	}
 
 	final public function create($user)
@@ -83,6 +85,32 @@ class UserUtil
 		}
 
 		return $user;
+	}
+
+	final public function update($user)
+	{
+		if (!($user instanceof User)) {
+			throw new Exception('Invalid user object');
+		}
+
+		$username = $this->DBRef->filterString($user->getName());
+		$username = $this->DBRef->sanitizeString($username);
+
+		$password = $this->DBRef->filterString($user->getPassword());
+		$email = $this->DBRef->filterString($user->getEmail());
+
+		$t = time();
+		$user->setLastUpdate($t);
+
+		$query = "UPDATE users SET ";
+		$query .= "NAME = '" . $username . "', ";
+		$query .= "EMAIL = '" . $email . "', ";
+		$query .= "BALANCE = " . $user->getBalance() . ", ";
+		$query .= "CONFIG = '" . $user->getConfig() . "', ";
+		$query .= "LASTUPDATE = " . $user->getLastUpdate() ." ";
+		$query .= "WHERE ID = " . $user->getId();
+		
+		$this->DBRef->ExecQuery($query);
 	}
 
 	final public function getUserById($userId)
@@ -170,10 +198,10 @@ class UserUtil
 
 		$res = $this->DBRef->GetSingleResult($query);
 
-		if (count($res) == 0) {
+		if (count($res) == 0 || $res == 0) {
 			return null;
 		} else {
-			$user = new User($res['ID'], $res['NAME'], $res['EMAIL']);
+			$user = new User((int)$res['ID'], $res['NAME'], $res['EMAIL']);
 			$user->setPassword($res['PASSWORD']);
 			$user->setBalance($res['BALANCE']);
 			$user->setConfig($res['CONFIG']);

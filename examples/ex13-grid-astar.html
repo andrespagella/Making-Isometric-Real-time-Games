@@ -10,6 +10,11 @@
 			window.onload = function () {
 				var tileMap = [];
 
+				var path = {
+					start: null,
+					stop: null	
+				}
+
 				var tile = {
 					width: 6,
 					height: 6
@@ -20,18 +25,55 @@
 					height: 100
 				}
 
-				//var a = new aStar(tileMap, grid.width, grid.height, {x: 0, y: 0}, {x: 20, y: 20});
-
 				var canvas = document.getElementById('myCanvas');
+				canvas.addEventListener('click', handleClick, false);
+
 				var c = canvas.getContext('2d');
 
-				// Generate 300 random elements
-				for (var i = 0; i < 300; i++) {
+				// Generate 1000 random elements
+				for (var i = 0; i < 1000; i++) {
 					generateRandomElement();
 				}
 
 				// Draw the entire grid
-				draw();
+				draw();				
+
+				function handleClick(e) {
+					// When a click is detected, translate the mouse coordinates to pixel coordinates
+					var row = Math.floor((e.clientX - 10) / tile.width);
+					var column = Math.floor((e.clientY - 10) / tile.height);
+
+					if (tileMap[row] == null) {
+						tileMap[row] = [];
+					}
+
+					if (tileMap[row][column] !== 0 && tileMap[row][column] !== 1) {
+						tileMap[row][column] = 0;
+
+						if (path.start === null) {
+							path.start = {x: row, y: column};
+						} else {
+							path.stop = {x: row, y: column};
+
+							var a = new aStar(tileMap, grid.width, grid.height, path.start, path.stop);
+							
+							if (a.length > 0) {
+								for (var i = 0, len = a.length; i < len; i++) {
+									if (tileMap[a[i].x] === undefined) {
+										tileMap[a[i].x] = [];
+									}
+
+									tileMap[a[i].x][a[i].y] = 0;
+								}
+							}
+
+							path.start = null;
+							path.stop = null;
+						}
+
+						draw();
+					}
+				}
 
 				function generateRandomElement() {
 					var rndRow = Math.floor(Math.random() * (grid.width + 1));

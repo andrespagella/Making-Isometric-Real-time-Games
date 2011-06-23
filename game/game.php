@@ -222,9 +222,8 @@
 
 							g.initializeGrid();
 
-							//handleGameState(GameState.TITLESCREEN);
-							handleGameState(GameState.PLAYING);
-
+							handleGameState(GameState.TITLESCREEN);
+							
 							break;
 						case GameState.TITLESCREEN:
 							showIntro(canvas, true);

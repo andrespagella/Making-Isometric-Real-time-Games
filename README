@@ -7,8 +7,8 @@ suffices to simply provide suitable attribution, in the source code and
 documentation of your program, with a comment like the following:
 
 // This code is from the book JavaScript: Making Isometric Social Real-Time Games with HTML5, CSS3 and Javascript
-// (ISBN #???). Copyright ??? by Mario Andres Pagella.
+// (ISBN #978-1-4493-0475-1). Copyright ??? by Mario Andres Pagella.
 
 Please note that the examples are not production code and have not been
-carefully testing. They are provided "as-is" and come with no warranty
-of any kind.
+carefully tested. They are provided "as-is" and come with no warranty
+whatsoever.

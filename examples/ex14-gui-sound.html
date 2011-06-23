@@ -16,12 +16,19 @@
 		<!-- Chrome Frame -->
 		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 
-		<title>Example 18 - Graphical User Interface</title>
+		<title>Example 14 - Graphical User Interface</title>
 		
 		<link rel="stylesheet" href="ui-style.css" />
 		<script src="../utils/modernizr-1.7.min.js" charset="utf-8"></script>
-		<script src="game-ex18.js" charset="utf-8"></script>
+		<script src="game-ex14.js" charset="utf-8"></script>
+		<script src="soundutil.js" charset="utf-8"></script>
 		<script charset="utf-8">
+		
+			var su = null;
+			var sources = [
+				["../sounds/title.mp3", "audio/mp3"],
+				["../sounds/title.ogg", "audio/ogg"]
+			];
 
 			// Enums
 			var Keys = {
@@ -56,6 +63,15 @@
 
 				// Initialize the game object
 				var g = new Game(canvas, game, 500, 500);
+
+				if (!g.started) {
+					return;
+				}
+
+				// Play the background music
+				if (soundIsSupported()) {
+					su.play(sources, 0, 156000, globalVolume, false);
+				}
 
 				var pointer = {
 					DOWN: 'mousedown',
@@ -137,6 +153,25 @@
 							break;
 					}
 				}, false);
+			}
+
+			function soundIsSupported() {
+				var a = new Audio();
+				var failures = 0;
+
+				for (var i = 0; i < sources.length; i++) {
+					if (a.canPlayType(sources[i][1]) !== "maybe" &&
+						a.canPlayType(sources[i][1]) !== "probably") {
+						failures++;
+					}
+				}	
+
+				if (failures !== sources.length) {
+					su = new SoundUtil()
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 			function selectTool(tool, elem) {

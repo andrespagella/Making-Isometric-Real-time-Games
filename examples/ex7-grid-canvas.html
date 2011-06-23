@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Example 11</title>
+		<title>Example 7 (Generating a 2500 x 2500 grid)</title>
 		
 		<script charset="utf-8">	
 			window.onload = function () {
@@ -33,21 +33,10 @@
 				var canvas = document.getElementById('myCanvas');
 				var c = canvas.getContext('2d');
 
-				canvas.addEventListener('click', handleClick, false);
 				window.addEventListener('keydown', handleKeyDown, false);
 
+				initializeGrid();
 				draw();
-
-				function handleClick(e) {
-					// When a click is detected, translate the mouse coordinates to pixel coordinates
-					var row = Math.floor((e.clientX + scroll.x) / tile.width);
-					var column = Math.floor((e.clientY + scroll.y) / tile.height);
-
-					if (tileMap[row] == null) {
-						tileMap[row] = [];
-					}
-					tileMap[row][column] = 1;
-				}
 
 				function handleKeyDown(e) {
 					switch (e.keyCode) {
@@ -69,8 +58,20 @@
 					document.getElementById('scrolly').innerHTML = scroll.y;
 				}
 
-				function draw() {
+				function initializeGrid() {
+					for (var i = 0; i < grid.width; i++) {
+						tileMap[i] = [];
+						for (var j = 0; j < grid.height; j++) {
+							if ((i % 2) == 0 && (j % 2) == 0) {
+								tileMap[i][j] = 0;
+							} else {
+								tileMap[i][j] = 1;
+							}
+						}
+					}
+				}
 
+				function draw() {
 					c.fillStyle = '#FFFFFF';
 					c.fillRect (0, 0, canvas.width, canvas.height);
 					c.fillStyle = '#000000';
@@ -80,9 +81,6 @@
 					var rowCount = startRow + Math.floor(canvas.width / tile.width) + 1;
 					var colCount = startCol + Math.floor(canvas.height / tile.height) + 1;
 
-					rowCount = ((startRow + rowCount) > grid.width) ? grid.width : rowCount;
-					colCount = ((startCol + colCount) > grid.height) ? grid.height : colCount;
-
 					for (var row = startRow; row < rowCount; row++) {
 						for (var col = startCol; col < colCount; col++) {
 							var tilePositionX = tile.width * row;
@@ -90,21 +88,16 @@
 
 							tilePositionX -= scroll.x;
 							tilePositionY -= scroll.y;
-							
-							if (tileMap[row] != null && tileMap[row][col] != null) {
-								c.fillStyle = '#CC0000';
-								c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
-								c.fillStyle = '#000000';
+
+							if (tileMap[row][col] == 0) {
+								c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
 							} else {
-								if ((row % 2) == 0 && (col % 2) == 0) {
-									c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
-								} else {
-									c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
-								}
+								c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
 							}
+
 						}
 					}
-					
+
 					setTimeout(draw, 1);
 				}
 			}

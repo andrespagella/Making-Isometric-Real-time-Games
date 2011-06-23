@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Example 10 Alt (Generating a 2500 x 2500 grid)</title>
+		<title>Example 8</title>
 		
 		<script charset="utf-8">	
 			window.onload = function () {
@@ -33,9 +33,21 @@
 				var canvas = document.getElementById('myCanvas');
 				var c = canvas.getContext('2d');
 
+				canvas.addEventListener('click', handleClick, false);
 				window.addEventListener('keydown', handleKeyDown, false);
 
 				draw();
+
+				function handleClick(e) {
+					// When a click is detected, translate the mouse coordinates to pixel coordinates
+					var row = Math.floor((e.clientX + scroll.x) / tile.width);
+					var column = Math.floor((e.clientY + scroll.y) / tile.height);
+
+					if (tileMap[row] == null) {
+						tileMap[row] = [];
+					}
+					tileMap[row][column] = 1;
+				}
 
 				function handleKeyDown(e) {
 					switch (e.keyCode) {
@@ -58,6 +70,7 @@
 				}
 
 				function draw() {
+
 					c.fillStyle = '#FFFFFF';
 					c.fillRect (0, 0, canvas.width, canvas.height);
 					c.fillStyle = '#000000';
@@ -77,16 +90,21 @@
 
 							tilePositionX -= scroll.x;
 							tilePositionY -= scroll.y;
-
-							if ((row % 2) == 0 && (col % 2) == 0) {
-								c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
-							} else {
+							
+							if (tileMap[row] != null && tileMap[row][col] != null) {
+								c.fillStyle = '#CC0000';
 								c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
+								c.fillStyle = '#000000';
+							} else {
+								if ((row % 2) == 0 && (col % 2) == 0) {
+									c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
+								} else {
+									c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);
+								}
 							}
-
 						}
 					}
-
+					
 					setTimeout(draw, 1);
 				}
 			}

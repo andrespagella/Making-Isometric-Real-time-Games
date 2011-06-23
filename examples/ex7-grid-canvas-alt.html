@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Example 10 (Generating a 2500 x 2500 grid)</title>
+		<title>Example 7 Alt (Generating a 2500 x 2500 grid)</title>
 		
 		<script charset="utf-8">	
 			window.onload = function () {
@@ -35,7 +35,6 @@
 
 				window.addEventListener('keydown', handleKeyDown, false);
 
-				initializeGrid();
 				draw();
 
 				function handleKeyDown(e) {
@@ -58,19 +57,6 @@
 					document.getElementById('scrolly').innerHTML = scroll.y;
 				}
 
-				function initializeGrid() {
-					for (var i = 0; i < grid.width; i++) {
-						tileMap[i] = [];
-						for (var j = 0; j < grid.height; j++) {
-							if ((i % 2) == 0 && (j % 2) == 0) {
-								tileMap[i][j] = 0;
-							} else {
-								tileMap[i][j] = 1;
-							}
-						}
-					}
-				}
-
 				function draw() {
 					c.fillStyle = '#FFFFFF';
 					c.fillRect (0, 0, canvas.width, canvas.height);
@@ -81,6 +67,9 @@
 					var rowCount = startRow + Math.floor(canvas.width / tile.width) + 1;
 					var colCount = startCol + Math.floor(canvas.height / tile.height) + 1;
 
+					rowCount = ((startRow + rowCount) > grid.width) ? grid.width : rowCount;
+					colCount = ((startCol + colCount) > grid.height) ? grid.height : colCount;
+
 					for (var row = startRow; row < rowCount; row++) {
 						for (var col = startCol; col < colCount; col++) {
 							var tilePositionX = tile.width * row;
@@ -89,7 +78,7 @@
 							tilePositionX -= scroll.x;
 							tilePositionY -= scroll.y;
 
-							if (tileMap[row][col] == 0) {
+							if ((row % 2) == 0 && (col % 2) == 0) {
 								c.strokeRect(tilePositionX, tilePositionY, tile.width, tile.height);
 							} else {
 								c.fillRect(tilePositionX, tilePositionY, tile.width, tile.height);

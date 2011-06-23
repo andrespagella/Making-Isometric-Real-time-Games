@@ -2,14 +2,14 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Example 17 - (Placing buildings)</title>
+		<title>Example 12Alt- (Capturing click events and translating them to matrix coordinates + Matrix Rotation)</title>
 		
 		<script charset="utf-8">	
 
 			window.onload = function () {
 				var grid = {
-					width: 10,
-					height: 10
+					width: 5,
+					height: 5
 				}
 
 				var canvas = document.getElementById('myCanvas');
@@ -20,12 +20,42 @@
 				var tile = new Image();
 				tile.src = "../img/tile.png";
 
-				var building = new Image();
-				building.src = "../img/icecream.png";
+				var dirt = new Image();
+				dirt.src = "../img/dirt.png";
 
 				canvas.addEventListener('mousedown', handleMouseDown, false);
+				window.addEventListener('keydown', handleKeyDown, false);
 
 				draw();
+
+				// There's probably a more efficient way to do this
+				function rotateMatrix(matrix, mW, mH, sW, sH) {
+				    var m = [];
+				    var sW = (sW === undefined) ? 0 : sW;
+				    var sH = (sH === undefined) ? 0 : sH;
+
+				    for (var i = sW; i < mW; i++) {
+				        for (var j = sH; j < mH; j++) {
+				        	var row = (mW - j) - 1;
+
+				        	if (tileMap[row] !== undefined && tileMap[row][i]) {
+				        		m[i] = (m[i] === undefined) ? [] : m[i];
+				        		m[i][j] = tileMap[row][i];
+				        	}
+				        }
+				    }
+
+				    return m;
+				}
+
+				function handleKeyDown(e) {
+					// Rotate the matrix when the user presses the R key
+					if (e.keyCode === 82) {
+						tileMap = rotateMatrix(tileMap, grid.width, grid.height);
+					}
+
+					draw();
+				}
 
 				function handleMouseDown(e) {
 					var gridOffsetY = grid.height;
@@ -51,8 +81,9 @@
 						tileMap[row] = (tileMap[row] === undefined) ? [] : tileMap[row];
 							
 						tileMap[row][col] = 1;
-						draw();
 					}
+
+					draw();
 				}
 
 				
@@ -60,8 +91,8 @@
 					
 					c.clearRect (0, 0, canvas.width, canvas.height);
 
-					for (var row = 0; row < 10; row++) {
-						for (var col = 0; col < 10; col++) {
+					for (var row = 0; row < grid.width; row++) {
+						for (var col = 0; col < grid.height; col++) {
 
 							var tilePositionX = (row - col) * tile.height;
 
@@ -71,9 +102,7 @@
 							var tilePositionY = (row + col) * (tile.height / 2);
 
 							if (tileMap[row] != null && tileMap[row][col] != null) {
-								tilePositionY -= building.height - tile.height;
-								tilePositionX -= (building.width / 2) - (tile.width / 2);
-								c.drawImage(building, Math.round(tilePositionX), Math.round(tilePositionY), building.width, building.height);
+								c.drawImage(dirt, Math.round(tilePositionX), Math.round(tilePositionY), dirt.width, dirt.height);
 							} else {
 								c.drawImage(tile, Math.round(tilePositionX), Math.round(tilePositionY), tile.width, tile.height);	
 							}
@@ -84,6 +113,7 @@
 		</script>
     </head>
     <body>
-		<canvas id="myCanvas" width="600" height="300"></canvas>
+		<canvas id="myCanvas" width="600" height="300"></canvas><br />
+		Press R to rotate the matrix
     </body>
 </html>

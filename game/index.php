@@ -83,7 +83,7 @@
 		<link rel="stylesheet" href="css/site.css" />
 		<script src="../utils/modernizr-1.7.min.js" charset="utf-8"></script>
 
-		<script charset="utf-8">
+		<script>
 			window.onload = function () {
 				var pointer = {
 					UP: 'mouseup'

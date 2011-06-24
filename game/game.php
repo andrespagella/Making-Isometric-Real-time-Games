@@ -74,7 +74,7 @@
 		<script src="js/resourceLoader.js" charset="utf-8"></script>
 		<script src="js/misc.js" charset="utf-8"></script>
 
-		<script charset="utf-8">
+		<script>
 
 			// Enums
 			var Keys = {

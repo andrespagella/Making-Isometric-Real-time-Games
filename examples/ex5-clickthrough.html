@@ -70,21 +70,13 @@
 						}
 					}
 
-					if (obj.currentStyle) {
-						padding.x = obj.currentStyle['paddingLeft'];
-						padding.y = obj.currentStyle['paddingTop'];
+					var cs = document.defaultView.getComputedStyle(obj, null);
 
-						margin.x = obj.currentStyle['marginLeft'];
-						margin.y = obj.currentStyle['marginTop'];
-					} else if (window.getComputedStyle) {
-						var cs = document.defaultView.getComputedStyle(obj, null);
+					padding.x = cs.getPropertyValue('padding-left').substr(0, cs.getPropertyValue('padding-left').length - 2);
+					padding.y = cs.getPropertyValue('padding-top').substr(0, cs.getPropertyValue('padding-top').length - 2);
 
-						padding.x = cs.getPropertyValue('padding-left').substr(0, cs.getPropertyValue('padding-left').length - 2);
-						padding.y = cs.getPropertyValue('padding-top').substr(0, cs.getPropertyValue('padding-top').length - 2);
-
-						margin.x = cs.getPropertyValue('margin-left').substr(0, cs.getPropertyValue('margin-left').length - 2);
-						margin.y = cs.getPropertyValue('margin-top').substr(0, cs.getPropertyValue('margin-top').length - 2);
-					}
+					margin.x = cs.getPropertyValue('margin-left').substr(0, cs.getPropertyValue('margin-left').length - 2);
+					margin.y = cs.getPropertyValue('margin-top').substr(0, cs.getPropertyValue('margin-top').length - 2);
 
 					offset.x = padding.x + margin.x;
 					offset.y = padding.y + margin.y;
@@ -103,48 +95,35 @@
 							 * therefore we need an alternative method of figuring out if the div
 							 * has been styled using a stylesheet.
 							 */	
-							if (obj.currentStyle) {
-								if (obj.currentStyle['backgroundColor'].length === 0) {
-									if (obj.currentStyle['backgroundImage'].length === 0) {
-										// No solid background color and no background image
-										return true;
-									} else {
-										var w = obj.currentStyle['width'];
-										var h = obj.currentStyle['height'];
+							
+							var cs = document.defaultView.getComputedStyle(obj, null);
+							if (cs.getPropertyValue('background-color') === null ||
+								cs.getPropertyValue('background-color') === 'rgba(0, 0, 0, 0)') {
 
-										var src = obj.currentStyle['backgroundImage'].substr(4);
-										return isPixelTransparent(src.substr(0, src.length - 1), (x - rx), (y - ry), w, h, offset.x, offset.y);
-									}
-								}
-							} else if (window.getComputedStyle) {
-								var cs = document.defaultView.getComputedStyle(obj, null);
-								if (cs.getPropertyValue('background-color') === null ||
-									cs.getPropertyValue('background-color') === 'rgba(0, 0, 0, 0)') {
+								if (cs.getPropertyValue('background-image') == null || cs.getPropertyValue('background-image') == 'none') {
+									// No solid background color and no background image
+									return true;
+								} else {
+									var w = cs.getPropertyValue('width').substr(0, cs.getPropertyValue('width').length - 2);
+									var h = cs.getPropertyValue('height').substr(0, cs.getPropertyValue('width').length - 2);
+									
+									/**
+									 * cs.getPropertyValue('background-image') returns the image URL
+									 * in the format url(file), we just need the file, so we need to
+									 * get rid of the 'url(' and the ')'
+									 */
+									var src = cs.getPropertyValue('background-image').substr(4);
+									src = src.substr(0, src.length - 1);
 
-									if (cs.getPropertyValue('background-image') == null || cs.getPropertyValue('background-image') == 'none') {
-										// No solid background color and no background image
-										return true;
-									} else {
-										var w = cs.getPropertyValue('width').substr(0, cs.getPropertyValue('width').length - 2);
-										var h = cs.getPropertyValue('height').substr(0, cs.getPropertyValue('width').length - 2);
-										
-										/**
-										 * cs.getPropertyValue('background-image') returns the image URL
-										 * in the format url(file), we just need the file, so we need to
-										 * get rid of the 'url(' and the ')'
-										 */
-										var src = cs.getPropertyValue('background-image').substr(4);
-										src = src.substr(0, src.length - 1);
+									var bOffset = getBackgroundPosition(src, cs.getPropertyValue('background-position'));
 
-										var bOffset = getBackgroundPosition(src, cs.getPropertyValue('background-position'));
+									offset.x = bOffset.x;
+									offset.y = bOffset.y;
 
-										offset.x = bOffset.x;
-										offset.y = bOffset.y;
-
-										return isPixelTransparent(src, (x - rx), (y - ry), w, h, offset.x, offset.y);
-									}
+									return isPixelTransparent(src, (x - rx), (y - ry), w, h, offset.x, offset.y);
 								}
 							}
+							
 							break;
 					}
 

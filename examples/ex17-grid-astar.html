@@ -2,9 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Example 13 - (A* working on a grid with unset indexes)</title>
+		<title>Example 17 - (A* working on a grid with unset indexes using web workers)</title>
 		
-		<script charset="utf-8" src="astar.js"></script>
 		<script>	
 
 			window.onload = function () {
@@ -55,17 +54,7 @@
 						} else {
 							path.stop = {x: row, y: column};
 
-							var a = new aStar(tileMap, grid.width, grid.height, path.start, path.stop);
-							
-							if (a.length > 0) {
-								for (var i = 0, len = a.length; i < len; i++) {
-									if (tileMap[a[i].x] === undefined) {
-										tileMap[a[i].x] = [];
-									}
-
-									tileMap[a[i].x][a[i].y] = 0;
-								}
-							}
+							callWorker(path, processWorkerResults);
 
 							path.start = null;
 							path.stop = null;
@@ -73,6 +62,34 @@
 
 						draw();
 					}
+				}
+
+				function callWorker(path, callback) {
+					var w = new Worker('astar.js');
+					w.postMessage({
+						tileMap: tileMap,
+						grid: {
+							width: grid.width,
+							height: grid.height
+						},
+						start: path.start,
+						stop: path.stop
+					});
+					w.onmessage = callback;
+				}
+
+				function processWorkerResults(e) {
+					if (e.data.length > 0) {
+						for (var i = 0, len = e.data.length; i < len; i++) {
+							if (tileMap[e.data[i].x] === undefined) {
+								tileMap[e.data[i].x] = [];
+							}
+
+							tileMap[e.data[i].x][e.data[i].y] = 0;
+						}
+					}
+
+					draw();
 				}
 
 				function generateRandomElement() {

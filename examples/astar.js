@@ -105,16 +105,16 @@ aStar.prototype.checkDifference = function(src, dest) {
 }
 
 aStar.prototype.getDistance = function(src, dest) {
-	return Math.max(Math.abs(src.x - dest.x), Math.abs(src.y - dest.y));	
+	return Math.abs(src.x - dest.x) + Math.abs(src.y - dest.y);
 }
 
 function Node(parentNode, src) {
 	this.parentNode = parentNode;
-    this.x = src.x;
-    this.y = src.y;
-    this.F = 0;
-    this.G = 0;
-    this.H = 0;
+  this.x = src.x;
+  this.y = src.y;
+  this.F = 0;
+  this.G = 0;
+  this.H = 0;
 }
 
 var NodeList = function(sorted, sortParam) {

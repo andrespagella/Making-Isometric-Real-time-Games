@@ -76,7 +76,7 @@ function Game(canvas, game, gridSizeW, gridSizeH) {
 Game.prototype.handleGestureEnd = function(e) {
 	e.preventDefault();
 
-	if (e.scale >= 0) {
+	if (Math.floor(e.scale) == 0) {
 		this.zoomIn();
 	} else {
 		this.zoomOut();

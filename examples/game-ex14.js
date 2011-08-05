@@ -182,37 +182,10 @@ Game.prototype.handleMouseDown = function(e) {
     this.draw();
 }
 
-Game.prototype.doResize = function(invert) {
-	if (invert == undefined || !invert) {
-		this.canvas.width = document.body.clientWidth;
-		this.canvas.height = document.body.clientHeight;
-	} else {
-		this.canvas.width = document.body.clientHeight;
-		this.canvas.height = document.body.clientWidth;
-	}
-
+Game.prototype.doResize = function() {
+	this.canvas.width = document.body.clientWidth;
+	this.canvas.height = document.body.clientHeight;
 	this.draw();
-}
-
-Game.prototype.handleOrientationChange = function() {
-	if (window.orientation) {
-		this.gameContainer.setAttribute('class', '');
-
-		switch(window.orientation) {
-            case 0:
-                this.gameContainer.setAttribute('class', 'rot0deg');
-            break;
-            case 90:
-                this.gameContainer.setAttribute('class', 'rot270deg');
-            break;
-            case 180:
-                this.gameContainer.setAttribute('class', 'rot180deg');
-            break;
-            case -90:
-               this.gameContainer.setAttribute('class', 'rot90deg');
-            break;
-        }
-	}
 }
 
 Game.prototype.translatePixelsToMatrix = function(x, y) {

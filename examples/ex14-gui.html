@@ -64,9 +64,9 @@
 				};
 
 				if (Modernizr.touch){
-					pointer.DOWN = 'ontouchstart';
-					pointer.UP = 'ontouchend';
-					pointer.MOVE = 'ontouchmove';
+					pointer.DOWN = 'touchstart';
+					pointer.UP = 'touchend';
+					pointer.MOVE = 'touchmove';
 				}
 
 				// Set up the event listeners
@@ -77,12 +77,7 @@
 
 				if (Modernizr.touch){
 					// Detect gestures
-					window.addEventListener('ongestureend', function(e) { g.handleGestureEnd(e); }, false);
-
-					// Device orientation
-					if (window.orientation) {
-						window.addEventListener('orientationchange', g.handleOrientationChange, false);		
-					}
+					window.addEventListener('gestureend', function(e) { g.handleGestureEnd(e); }, false);
 				} else {
 					window.addEventListener('keydown', function(e) { g.handleKeyDown(e); }, false);
 
@@ -172,7 +167,7 @@
 		</script>
     </head>
     <body>
-    	<div id="game" class="rot0deg">
+    	<div id="game">
 
 			<canvas id="gameCanvas" width="1" height="1"></canvas>
 			<div id="ui">

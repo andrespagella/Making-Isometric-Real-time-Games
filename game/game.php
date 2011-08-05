@@ -117,9 +117,9 @@
 			};
 
 			if (Modernizr.touch){
-				pointer.DOWN = 'ontouchstart';
-				pointer.UP = 'ontouchend';
-				pointer.MOVE = 'ontouchmove';
+				pointer.DOWN = 'touchstart';
+				pointer.UP = 'touchend';
+				pointer.MOVE = 'touchmove';
 			}
 
 			window.onload = function () {
@@ -263,7 +263,7 @@
     </head>
     <body>
 
-    	<div id="game" class="rot0deg">
+    	<div id="game">
 
 			<canvas id="gameCanvas" width="1" height="1"></canvas>
 			<div id="ui" class="hidden">

@@ -1,5 +1,6 @@
 // The worker will take care of the instantiation of the astar class
 onmessage = function(e){
+	postMessage(alert("hola"));
 	var a = new aStar(e.data.tileMap, e.data.grid.width, e.data.grid.height, e.data.start, e.data.stop);
 	postMessage(a);
 }

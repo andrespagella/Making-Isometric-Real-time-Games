@@ -16,38 +16,6 @@ body {
 
 .hidden { display: none; }
 
-#game.rot0deg {
-	-webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotate(0deg);
-	-moz-transform: translateX(0px) translateY(0px) rotate(0deg);
-	-o-transform: translateX(0px) translateY(0px) rotate(0deg);
-	-ms-transform: translateX(0px) translateY(0px) rotate(0deg);
-	transform: translateX(0px) translateY(0px) rotate(0deg);
-}
-
-#game.rot90deg {
-	-webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotate(90deg);
-	-moz-transform: translateX(0px) translateY(0px) rotate(90deg);
-	-o-transform: translateX(0px) translateY(0px) rotate(90deg);
-	-ms-transform: translateX(0px) translateY(0px) rotate(90deg);
-	transform: translateX(0px) translateY(0px) rotate(90deg);
-}
-
-#game.rot180deg {
-	-webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotate(180deg);
-	-moz-transform: translateX(0px) translateY(0px) rotate(180deg);
-	-o-transform: translateX(0px) translateY(0px) rotate(180deg);
-	-ms-transform: translateX(0px) translateY(0px) rotate(180deg);
-	transform: translateX(0px) translateY(0px) rotate(180deg);
-}
-
-#game.rot270deg {
-	-webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotate(270deg);
-	-moz-transform: translateX(0px) translateY(0px) rotate(270deg);
-	-o-transform: translateX(0px) translateY(0px) rotate(270deg);
-	-ms-transform: translateX(0px) translateY(0px) rotate(270deg);
-	transform: translateX(0px) translateY(0px) rotate(270deg);
-}
-
 #ui #top {
 	background-color: rgba(255, 255, 255, 0.3);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.4);

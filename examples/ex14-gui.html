@@ -73,17 +73,17 @@
 				window.addEventListener('resize', function() { g.doResize(); }, false);
 				canvas.addEventListener(pointer.DOWN, function(e) { g.handleMouseDown(e); }, false);
 				canvas.addEventListener(pointer.MOVE, function(e) { g.handleDrag(e); }, false);
-				window.addEventListener(pointer.UP, function(e) { g.handleMouseUp(e); }, false);
+				document.body.addEventListener(pointer.UP, function(e) { g.handleMouseUp(e); }, false);
 
 				if (Modernizr.touch){
 					// Detect gestures
-					window.addEventListener('gestureend', function(e) { g.handleGestureEnd(e); }, false);
+					document.body.addEventListener('gestureend', function(e) { g.handleGestureEnd(e); }, false);
 				} else {
-					window.addEventListener('keydown', function(e) { g.handleKeyDown(e); }, false);
+					document.body.addEventListener('keydown', function(e) { g.handleKeyDown(e); }, false);
 
 					// Detect mousewheel scrolling
-					window.addEventListener('mousewheel', function(e) { g.handleScroll(e); }, false);
-					window.addEventListener('DOMMouseScroll', function(e) { g.handleScroll(e); }, false);
+					document.body.addEventListener('mousewheel', function(e) { g.handleScroll(e); }, false);
+					document.body.addEventListener('DOMMouseScroll', function(e) { g.handleScroll(e); }, false);
 				}
 
 				// Listen for GUI events

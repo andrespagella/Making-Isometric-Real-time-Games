@@ -90,10 +90,10 @@
 				};
 
 				if (Modernizr.touch){
-					pointer.UP = 'ontouchend';
+					pointer.UP = 'touchend';
 				}
 
-				window.addEventListener(pointer.UP, handleClick, false);
+				document.body.addEventListener(pointer.UP, handleClick, false);
 			}
 
 			function handleClick(e) {

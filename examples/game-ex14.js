@@ -130,9 +130,19 @@ Game.prototype.handleDrag = function(e) {
 	switch (Tools.current) {
 		case Tools.MOVE:
 			if (this.dragHelper.active) {
+				var x, y;
+
+				if (Modernizr.touch) {
+					x = e.touches[0].pageX;
+					y = e.touches[0].pageY;
+				} else {
+					x = e.clientX;
+					y = e.clientY;
+				}
+
 				// Smooth scrolling effect
-				this.scrollPosition.x -= (this.dragHelper.x - e.clientX) / 18;
-				this.scrollPosition.y -= (this.dragHelper.y - e.clientY) / 18;
+				this.scrollPosition.x -= (this.dragHelper.x - x) / 18;
+				this.scrollPosition.y -= (this.dragHelper.y - y) / 18;
 			}
 
 			this.draw();
@@ -151,7 +161,17 @@ Game.prototype.handleMouseUp = function(e) {
 }
 
 Game.prototype.handleMouseDown = function(e) {
+	var x, y;
+
 	e.preventDefault();
+
+	if (Modernizr.touch) {
+		x = e.touches[0].pageX;
+		y = e.touches[0].pageY;
+	} else {
+		x = e.clientX;
+		y = e.clientY;
+	}
 
 	switch (Tools.current) {
 		case Tools.BUILD:
@@ -159,8 +179,8 @@ Game.prototype.handleMouseDown = function(e) {
 			break;
 		case Tools.MOVE:
 			this.dragHelper.active = true;
-			this.dragHelper.x = e.clientX;
-			this.dragHelper.y = e.clientY;
+			this.dragHelper.x = x;
+			this.dragHelper.y = y;
 			break;
 		case Tools.ZOOM_IN:
 			this.zoomIn();
@@ -170,7 +190,7 @@ Game.prototype.handleMouseDown = function(e) {
 			break;
 		case Tools.DEMOLISH:
 			
-			var pos = this.translatePixelsToMatrix(e.clientX, e.clientY);
+			var pos = this.translatePixelsToMatrix(x, y);
 
 			if (this.tileMap[pos.row] != undefined && this.tileMap[pos.row][pos.col] != undefined) {
 				this.tileMap[pos.row][pos.col] = null;

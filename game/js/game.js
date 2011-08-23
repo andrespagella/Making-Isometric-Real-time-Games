@@ -74,6 +74,7 @@ function Game(canvas, game, gridSizeW, gridSizeH) {
 }
 
 Game.prototype.handleGestureEnd = function(e) {
+	alert('fd');
 	e.preventDefault();
 
 	if (Math.floor(e.scale) == 0) {
@@ -137,9 +138,19 @@ Game.prototype.handleDrag = function(e) {
 	switch (Tools.current) {
 		case Tools.MOVE:
 			if (this.dragHelper.active) {
+				var x, y;
+
+				if (Modernizr.touch) {
+					x = e.touches[0].pageX;
+					y = e.touches[0].pageY;
+				} else {
+					x = e.clientX;
+					y = e.clientY;
+				}
+
 				// Smooth scrolling effect
-				this.scrollPosition.x -= Math.round((this.dragHelper.x - e.clientX) / 18);
-				this.scrollPosition.y -= Math.round((this.dragHelper.y - e.clientY) / 18);
+				this.scrollPosition.x -= Math.round((this.dragHelper.x - x) / 18);
+				this.scrollPosition.y -= Math.round((this.dragHelper.y - y) / 18);
 
 				this.draw();
 			}
@@ -208,9 +219,19 @@ Game.prototype.handleMouseDown = function(e) {
 			
 			break;
 		case Tools.MOVE:
+			var x, y;
+
+			if (Modernizr.touch) {
+				x = e.touches[0].pageX;
+				y = e.touches[0].pageY;
+			} else {
+				x = e.clientX;
+				y = e.clientY;
+			}
+
 			this.dragHelper.active = true;
-			this.dragHelper.x = e.clientX;
-			this.dragHelper.y = e.clientY;
+			this.dragHelper.x = x;
+			this.dragHelper.y = y;
 			break;
 		case Tools.ZOOM_IN:
 			this.zoomIn();

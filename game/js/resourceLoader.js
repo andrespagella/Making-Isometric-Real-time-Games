@@ -42,8 +42,7 @@ ResourceLoader.prototype.startPreloading = function() {
 				var a = new Audio();
 
 				// Only preload sound files that we can play.
-				if (a.canPlayType(this.resources[i].fileType) === "maybe" ||
-					a.canPlayType(this.resources[i].fileType) === "probably") {
+				if (a.canPlayType(this.resources[i].fileType) === "probably") {
 					
 					a.src = this.resources[i].filePath;
 					a.type = this.resources[i].fileType;

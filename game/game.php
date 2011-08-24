@@ -38,7 +38,6 @@
 		$arrBldInst = $OperUtil->getBuildingInstances($user->getId());
 
 	}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +75,6 @@
 
 		<script>
 
-			// Enums
 			var Keys = {
 				UP: 38,
 				DOWN: 40,
@@ -122,8 +120,8 @@
 				pointer.MOVE = 'touchmove';
 			}
 
-			window.onload = function () {
 
+			window.onload = function () {
 				var canvas = document.getElementById('gameCanvas');
 				var game = document.getElementById('game');
 				var g = null;
@@ -148,7 +146,7 @@
 						case GameState.LOADED:
 							
 							// Initialize the game object
-							g = new Game(canvas, game, <?=GRID_X?>, <?=GRID_Y?>);
+							g = new Game(canvas, game, <?php echo GRID_X; ?>, <?php echo GRID_Y; ?>);
 
 							// Initialize the sound util
 							su = new SoundUtil();
@@ -158,6 +156,7 @@
 							}
 							
 							Game.prototype.initializeGrid = function() {
+								
 								// Re-use the same image object for all sprite objects.
 								var spritesheet = new Image();
 								spritesheet.src = '../img/spritesheet.png';
@@ -176,48 +175,67 @@
 								// Hotel sprite
 								var hs = new Sprite(spritesheet, 0, 0, 0, 0, 1, 0);
 
-								var obj = null;
+								var obj;
 
-								<?php for ($i = 0, $len = count($arrBldInst); $i < $len; $i++) { ?>
-									this.tileMap[<?=$arrBldInst[$i]->getXPos()?>] = (!this.tileMap[<?=$arrBldInst[$i]->getXPos()?>]) ? [] : this.tileMap[<?=$arrBldInst[$i]->getXPos()?>];
+<?php 
+								/**
+								 * TECHNICAL NOTE
+								 * All the buildings that we own are stored in the database server, however,
+								 * we need to be able to access them efficiently via Javascript. One approach would
+								 * have been to load a list of all our buildings, convert it to a JSON object, print it
+								 * somewhere (either on this same file or including an external file) and then parsing it
+								 * with JavaScript, but i found that it was terribly inefficient and took a very long time
+								 * and resources to initialize. Printing and initializing the objects directly (using an
+								 * approach similar to the one below is noticeably faster.
+								 * Additionally, the reason why it's being done here (on the same file as the rest of the
+								 * HTML code) is to minimize the number of requests (which is great for mobile devices with
+								 * high bandwidth and low latency)
+								 *
+								 * Although it looks a bit weird, I used this approach to appeal amateur developers as it
+								 * seemed to me that it'd be easier to understand.
+								 */
 
-									<?php 
-										switch($arrBldInst[$i]->getBuildingId()) { 
-											case 1: // Ice cream shop
-									?>
-												obj = new IceCreamShop(<?=$arrBldInst[$i]->getId()?>, icss);
-									<?php												
-												break;
-											case 2: // Hotel
-									?>
-												obj = new Hotel(<?=$arrBldInst[$i]->getId()?>, hs);
-									<?php												
-												break;
-											case 3: // Cinema
-									?>
-												obj = new Cinema(<?=$arrBldInst[$i]->getId()?>, cs);
-									<?php												
-												break;
-											case 4: // Tree
-									?>
-												obj = new Tree(<?=$arrBldInst[$i]->getId()?>, ts);
-									<?php												
-												break;
-										}
-									?>
+								for ($i = 0, $len = count($arrBldInst); $i < $len; $i++) {
+									// Position information of the building instance
+									$xpos = $arrBldInst[$i]->getXPos();
+									$ypos = $arrBldInst[$i]->getYPos();
 
-									this.tileMap[<?=$arrBldInst[$i]->getXPos()?>][<?=$arrBldInst[$i]->getYPos()?>] = obj;
-									for (var i = (<?=$arrBldInst[$i]->getXPos()?> + 1) - obj.tileWidth; i <= <?=$arrBldInst[$i]->getXPos()?>; i++) {
-										for (var j = (<?=$arrBldInst[$i]->getYPos()?> + 1) - obj.tileHeight; j <= <?=$arrBldInst[$i]->getYPos()?>; j++) {
-											this.tileMap[i] = (this.tileMap[i] == undefined) ? [] : this.tileMap[i];
+									// Also, we need to access additional information about each building
+									$building = $BuildingUtil->getBuildingById($arrBldInst[$i]->getBuildingId());
 
-											if (i !== <?=$arrBldInst[$i]->getXPos()?> || j !== <?=$arrBldInst[$i]->getYPos()?>) {
-												this.tileMap[i][j] = new BuildingPortion(obj.buildingTypeId, <?=$arrBldInst[$i]->getXPos()?> - i, <?=$arrBldInst[$i]->getYPos()?> - j);
-											}
-										}
+									switch($arrBldInst[$i]->getBuildingId()) { 
+										case 1: // Ice cream shop
+											echo "obj = new IceCreamShop(" . $arrBldInst[$i]->getId() .", icss);";
+											break;
+										case 2: // Hotel
+											echo "obj = new Hotel(" . $arrBldInst[$i]->getId() . ", hs);";
+											break;
+										case 3: // Cinema
+											echo "obj = new Cinema(" . $arrBldInst[$i]->getId() . ", cs);";
+											break;
+										case 4: // Tree
+											echo "obj = new Tree(" . $arrBldInst[$i]->getId() . ", ts);";
+											break;
 									}
 
-								<?php } ?>
+									echo "this.tileMap[" . $xpos . "] = (!this.tileMap[" . $xpos . "]) ? [] : this.tileMap[" . $xpos . "];";
+									echo "this.tileMap[" . $xpos . "][" . $ypos . "] = obj;";
+
+									// If a building occupies more than one tile, we'll need to create building portion objects
+									if ($building->getXSize() > 1 || $building->getYSize() > 1) {
+
+										for ($bx = (($xpos + 1) - $building->getXSize()); $bx < $xpos; $bx++) {
+											for ($by = (($ypos + 1) - $building->getYSize()); $by < $ypos; $by++) {
+												if ($bx !== $xpos && $by !== $ypos) {
+													echo "this.tileMap[" . $bx . "] = (!this.tileMap[" . $bx . "]) ? [] : this.tileMap[" . $bx . "];";
+													echo "this.tileMap[" . $bx . "][" . $by . "] = new BuildingPortion(obj.buildingTypeId, " . ($xpos - $bx) .", " . ($ypos - $by) . ");";
+												}
+											}	
+										}
+
+									}
+								}
+?>
 							}
 
 							g.initializeGrid();
@@ -228,8 +246,8 @@
 						case GameState.TITLESCREEN:
 							showIntro(canvas, true);
 
-							window.addEventListener(pointer.DOWN, function(e) { 
-								window.removeEventListener(pointer.DOWN, arguments.callee, false);
+							document.body.addEventListener(pointer.DOWN, function(e) { 
+								document.body.removeEventListener(pointer.DOWN, arguments.callee, false);
 								transitionTo(canvas, function() {
 									showCredits(canvas, undefined, function() {
 										transitionTo(canvas, function() {
@@ -268,7 +286,7 @@
 			<canvas id="gameCanvas" width="1" height="1"></canvas>
 			<div id="ui" class="hidden">
 				<div id="top">
-					Account Balance: <span id="balance"><?=$user->getBalance()?></span> Coins
+					Account Balance: <span id="balance"><?php echo $user->getBalance(); ?></span> Coins
 				</div>
 				<div id="tools">
 					<ul>
@@ -289,16 +307,18 @@
 
 							<?php for ($i = 0, $len = count($buildings); $i < $len; $i++) { ?>
 
-								<li info='{"buildingId": "<?=$buildings[$i]->getId()?>"}'>
-									<h2><?=$buildings[$i]->getName() . ' (' . $buildings[$i]->getXSize() . ' x ' . $buildings[$i]->getYSize() . ')'?></h2>
+								<li info='{"buildingId": "<?php echo $buildings[$i]->getId(); ?>"}'>
+									<h2><?php echo $buildings[$i]->getName() . ' (' . $buildings[$i]->getXSize() . ' x ' . $buildings[$i]->getYSize() . ')'; ?></h2>
 									<p>
-										<?php if ($buildings[$i]->getProfit() > 0) { ?>
-											Provides <?=$buildings[$i]->getProfit()?> coins every <?=$buildings[$i]->getLapse()?> seconds.
-										<?php } else { ?>
-											Decoration (Doesn't generate any profit over time)
-										<?php } ?>
+										<?php 
+											if ($buildings[$i]->getProfit() > 0) { 
+												echo "Provides " . $buildings[$i]->getProfit() . " coins every " . $buildings[$i]->getLapse() . " seconds.";
+											} else {
+												echo "Decoration (Doesn't generate any profits over time";
+											}
+										?>
 										<br />
-										<span>Costs: <?=$buildings[$i]->getCost()?> coins</span>
+										<span>Costs: <?php echo $buildings[$i]->getCost(); ?> coins</span>
 									</p>
 								</li>
 

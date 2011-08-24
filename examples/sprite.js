@@ -1,4 +1,4 @@
-// Sprite class
+// A generic sprite class
 
 var Sprite = function(src, width, height, offsetX, offsetY, frames, duration) {
 	this.spritesheet = null;

@@ -1,4 +1,5 @@
-// The worker will take care of the instantiation of the astar class
+// The worker will take care of the instantiation of the astar class, the astar class will return an
+// array of X, Y coordinates that later on we'll be able to use to find out what is the shortest path.
 onmessage = function(e){
 	var a = new aStar(e.data.tileMap, e.data.grid.width, e.data.grid.height, e.data.start, e.data.stop);
 	postMessage(a);

@@ -1,4 +1,6 @@
-// Simple timer utility
+/**
+ * A simple timer
+ */
 
 var Timer = function() {
 	this.date = new Date();

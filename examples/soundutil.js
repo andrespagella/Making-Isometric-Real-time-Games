@@ -1,5 +1,5 @@
 // Maximum number of sound objects allowed in the pool
-var MAX_PLAYBACKS = 6;
+var MAX_PLAYBACKS = 3;
 var globalVolume = 0.3;
 
 function SoundUtil() {
@@ -23,8 +23,7 @@ SoundUtil.prototype.play = function(file, startTime, duration, volume, loop) {
 		audioObject.obj.volume = volume;
 
 		for (var i = 0; i < file.length; i++) {
-			if (audioObject.obj.canPlayType(file[i][1]) === "maybe" || 
-				audioObject.obj.canPlayType(file[i][1]) === "probably") {
+			if (audioObject.obj.canPlayType(file[i][1]) === "probably") {
 				audioObject.obj.src = file[i][0];
 				audioObject.obj.type = file[i][1];
 				break;

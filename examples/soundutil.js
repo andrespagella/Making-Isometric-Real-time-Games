@@ -23,7 +23,8 @@ SoundUtil.prototype.play = function(file, startTime, duration, volume, loop) {
 		audioObject.obj.volume = volume;
 
 		for (var i = 0; i < file.length; i++) {
-			if (audioObject.obj.canPlayType(file[i][1]) === "probably") {
+			if (audioObject.obj.canPlayType(file[i][1]) === "probably" ||
+				audioObject.obj.canPlayType(file[i][1]) === "maybe") {
 				audioObject.obj.src = file[i][0];
 				audioObject.obj.type = file[i][1];
 				break;

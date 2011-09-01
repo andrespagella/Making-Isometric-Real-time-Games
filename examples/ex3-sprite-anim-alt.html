@@ -21,7 +21,7 @@
 				var c = canvas.getContext('2d');
 				
 				// Initialize our sprite array
-				var spritesheet = [['../img/char1.png'], ['../img/char2.png'], ['../img/char3.png']];
+				var spritesheet = ['../img/char1.png', '../img/char2.png', '../img/char3.png'];
 				var currentHero = 0;
 
 				// Preload the sprite images
@@ -229,6 +229,7 @@
 
 					hero.setPosition(Position.x, Position.y);
 					hero.animate(c, timer);
+					hero.draw(c);
 
 					setTimeout(function() {
 						draw(timer.getSeconds());

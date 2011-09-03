@@ -86,7 +86,7 @@ Game.prototype.handleScroll = function(e) {
 	var scrollValue = (e.wheelDelta == undefined) ? e.detail * -1 : e.wheelDelta;
 
 	if (scrollValue >= 0) {
-		this.zoomInt();
+		this.zoomIn();
 	} else {
 		this.zoomOut();
 	}

@@ -4,7 +4,13 @@
 		<meta charset="UTF-8" />
 		<title>Example 17 - (A* working on a grid with unset indexes using web workers)</title>
 		
-		<script>	
+		<script>
+
+			/**
+			 *	TECHNICAL NOTE
+			 *	This example may not run if executed locally (file://) on some browsers due to the same origin policy restriction (DOMException 18).
+			 *	You can fix this by uploading this example to a local/remote webserver.
+			 */ 
 
 			window.onload = function () {
 				var tileMap = [];
@@ -66,6 +72,7 @@
 
 				function callWorker(path, callback) {
 					var w = new Worker('astar.js');
+
 					w.postMessage({
 						tileMap: tileMap,
 						grid: {

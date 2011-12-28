@@ -122,7 +122,7 @@ function refresh() {
 	sync(processResponse);
 
 	setTimeout(function() { 
-		refresh(ui); 
+		refresh(); 
 	}, 15000);
 }
 

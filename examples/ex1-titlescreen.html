@@ -97,7 +97,7 @@
 					c.fillStyle = '#000000';
 					c.font = 'bold 16px Arial, sans-serif';
 										
-					var textSize = c.measureText (phrase);
+					var textSize = c.measureText(phrase).width;
 					var xCoord = (canvas.width / 2) - (textSize.width / 2);
 					
 					c.fillText (phrase, xCoord, (logo.y + logo.img.height) + 50);
